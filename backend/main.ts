@@ -24,6 +24,11 @@ class Routes {
         console.log(req.body)
         return req.body
     }
+
+    @Get('/errTest')
+    getErrorTest() {
+        throw new Error('Testing')
+    }
 }
 
 server.start()
