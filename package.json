@@ -2,9 +2,10 @@
   "name": "rezept-manager",
   "version": "0.0.1",
   "scripts": {
-    "setup": "node scripts/setup.js",
-    "start": "node-run-all npm run st",
+    "setup": "npm i && node scripts/setup.js",
+    "start": "node scripts/setup.js && npm-run-all --parallel start-backend start-frontend",
     "start-backend": "cd ./backend && npm start",
+    "start-frontend": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
