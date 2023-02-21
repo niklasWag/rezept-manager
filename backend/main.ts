@@ -1,14 +1,29 @@
-import express, {Express, Request, Response} from 'express'
+import {Request, Response} from 'express'
+import { Get, Post } from './src/decorators'
+import { Server } from './src/server'
 
-const host = 'localhost'
-const port = 8080
+const server = new Server()
 
-const app: Express = express()
+export function getServer() {
+    return server
+}
 
-app.get('/', (req: Request, res: Response) => {
-    res.send(`Express is running in a ${process.env.NODE_ENV} environment`)
-})
+class Routes {
+    @Get('/')
+    get() {
+        return `Express is running on port ${server.app.get('port')}`
+    }
 
-app.listen(port, host, () => {
-    console.log('Server is running')
-})
+    @Get('/test')
+    getTest() {
+        return 'Test'
+    }
+
+    @Post('/test')
+    postTest(req: Request, res: Response) {
+        console.log(req.body)
+        return req.body
+    }
+}
+
+server.start()
