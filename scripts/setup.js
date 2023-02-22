@@ -7,7 +7,7 @@ const tasks = new Listr([
     {
         title: 'Compile util',
         task: async () => {
-            await exec('cd rezept-util && npm i && npm run build')
+            await exec('cd domain-util && npm i && npm run build')
         }
     },
     {
