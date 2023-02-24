@@ -2,8 +2,9 @@
   "name": "rezept-manager",
   "version": "0.0.1",
   "scripts": {
+    "docker": "docker compose -p rezept-manager up -d",
     "setup": "npm i && node scripts/setup.js",
-    "start": "node scripts/setup.js && npm-run-all --parallel start-backend start-frontend",
+    "start": "npm run setup && npm run docker && npm-run-all --parallel start-backend start-frontend",
     "start-backend": "cd ./backend && npm start",
     "start-frontend": "",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,0 +1,9 @@
+services:
+  postgres:
+    container_name: rezept-postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=3Q4s!Uq8KG
+    ports:
+      - "5432:5432"
