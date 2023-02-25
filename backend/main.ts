@@ -1,8 +1,14 @@
 import {Request, Response} from 'express'
 import { Get, Post } from './src/decorators'
 import { Server } from './src/server'
+import { dataSource } from './src/Adapters/DatenbankAdapter'
+
 
 const server = new Server()
+
+dataSource.initialize()
+    .then(() => console.log('Database connection established'))
+    .catch((err) => console.log('Error while establishing database connection', err))
 
 export function getServer() {
     return server
