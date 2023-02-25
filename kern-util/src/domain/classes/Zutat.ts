@@ -1,18 +1,29 @@
 import { Identifizierbar } from "../interfaces"
-import { Menge } from "./Menge"
 
 export class Zutat implements Identifizierbar {
   id: number
   name: string
-  menge: Menge
+  typ: ZutatTyp
 
-  constructor(id: number, name: string, menge: Menge) {
+  constructor(id: number, name: string, typ: ZutatTyp) {
     this.id = id
     this.name = name
-    this.menge = menge
+    this.typ = typ
   }
 
   getId(): number {
     return this.id
   }
+}
+
+export enum ZutatTyp {
+  backwaren = 'Backwaren',
+  obst = 'Obst',
+  gemuese = 'Gemüse',
+  fleisch = 'Fleisch',
+  fisch = 'Fisch',
+  milchprodukte = 'Milchprodukte',
+  teigwaren = 'Teigwaren',
+  sonstiges = 'Sonstiges',
+  getraenke = 'Getränke'
 }
