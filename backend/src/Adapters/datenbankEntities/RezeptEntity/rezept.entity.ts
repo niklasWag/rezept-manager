@@ -12,9 +12,4 @@ export class RezeptEntity {
   @Column()
   aufwand: string
 
-  constructor(id: number, name: string, aufwand: string) {
-    this.id = id
-    this.name = name
-    this.aufwand = aufwand
-  }
 }
