@@ -25,7 +25,6 @@ describe('test RezeptEntityManager', () => {
   })
 
   it('should get all Rezepte', async () => {
-    console.log(await rezeptEntityManager.getAll())
     expect((await rezeptEntityManager.getAll()).find(res => res.id === mockRezept.id)).toMatchObject(expectedMockResult)
   })
 
