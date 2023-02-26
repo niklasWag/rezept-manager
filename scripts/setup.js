@@ -13,7 +13,7 @@ const tasks = new Listr([
     {
         title: 'Install backend dependencies',
         task: async () => {
-            await exec('cd backend && npm i')
+            await exec('cd backend && npm i ../kern-util && npm i')
         }
     },
     {
