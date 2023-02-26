@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm'
 
-@Entity()
+@Entity('rezeptZutat')
 export class RezeptZutatEntity {
 
   @PrimaryColumn()
