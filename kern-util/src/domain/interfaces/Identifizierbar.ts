@@ -1,5 +1,6 @@
 export interface Identifizierbar {
-  id: number
 
-  getId(): number;
+  getId(): number
+  
+  setId(id: number): void
 }
