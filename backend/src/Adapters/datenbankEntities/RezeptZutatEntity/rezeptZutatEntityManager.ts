@@ -21,15 +21,15 @@ export class RezeptZutatEntityManager {
     return await this.rezeptZutatRepository.find()
   }
 
-  async getById(id: number): Promise<RezeptZutatEntity> {
-    return await this.rezeptZutatRepository.findOneByOrFail({id})
+  async getById(rezeptId: number, zutatId: number): Promise<RezeptZutatEntity> {
+    return await this.rezeptZutatRepository.findOneByOrFail({rezeptId, zutatId})
   }
 
   async save(rezeptZutatEntity: RezeptZutatEntity): Promise<RezeptZutatEntity> {
     return await this.rezeptZutatRepository.save(rezeptZutatEntity)
   }
 
-  async delete(id: number): Promise<DeleteResult> {
-    return await this.rezeptZutatRepository.delete(id)
+  async delete(rezeptId: number, zutatId: number): Promise<DeleteResult> {
+    return await this.rezeptZutatRepository.delete({rezeptId, zutatId})
   }
 }
