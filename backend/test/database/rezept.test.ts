@@ -1,5 +1,5 @@
 import { RezeptEntityManager } from "../../src/Adapters/datenbankEntities/RezeptEntity/rezeptEntityManager";
-import { dataSource } from "../../src/Adapters/DatenbankAdapter";
+import { dataSource } from "../../src/Adapters/datenbankAdapter";
 import { Rezept, Aufwand, Zutat, ZutatTyp } from 'kern-util'
 import { RezeptEntity } from "../../src/Adapters/datenbankEntities/RezeptEntity/rezept.entity";
 

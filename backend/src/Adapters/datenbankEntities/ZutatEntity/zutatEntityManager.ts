@@ -1,5 +1,5 @@
 import { Zutat } from "kern-util";
-import { dataSource } from "../../DatenbankAdapter";
+import { dataSource } from "../../datenbankAdapter";
 import { ZutatEntity } from "./zutat.entity";
 import { DeleteResult } from "typeorm";
 

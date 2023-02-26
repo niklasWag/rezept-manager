@@ -1,4 +1,4 @@
-import { dataSource } from "../../src/Adapters/DatenbankAdapter";
+import { dataSource } from "../../src/Adapters/datenbankAdapter";
 import { Zutat, ZutatTyp } from 'kern-util'
 import { ZutatEntityManager } from "../../src/Adapters/datenbankEntities/ZutatEntity/zutatEntityManager";
 

@@ -1,4 +1,4 @@
-import { dataSource } from "../../DatenbankAdapter"
+import { dataSource } from "../../datenbankAdapter"
 import { RezeptZutatEntity } from "./rezeptZutat.entity"
 import { DeleteResult } from 'typeorm'
 

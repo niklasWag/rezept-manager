@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import { Get, Post } from './src/decorators'
 import { Server } from './src/server'
-import { dataSource } from './src/Adapters/DatenbankAdapter'
+import { dataSource } from './src/Adapters/datenbankAdapter'
 
 
 const server = new Server()

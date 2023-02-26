@@ -1,5 +1,5 @@
 import { Rezept } from "kern-util"
-import { dataSource } from "../../DatenbankAdapter"
+import { dataSource } from "../../datenbankAdapter"
 import { RezeptEntity } from "./rezept.entity"
 import { DeleteResult } from 'typeorm'
 
