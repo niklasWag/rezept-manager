@@ -27,7 +27,8 @@ export class ZutatEntityManager {
   }
 
   async save(zutat: Zutat): Promise<ZutatEntity> {
-    return await this.zutatRepository.save(zutat)
+    const zutatEntity: ZutatEntity = {id: zutat.getId(), name: zutat.name, typ: zutat.typ}
+    return await this.zutatRepository.save(zutatEntity)
   }
 
   async delete(id: number): Promise<DeleteResult> {

@@ -27,7 +27,8 @@ export class RezeptEntityManager {
   }
 
   async save(rezept: Rezept): Promise<RezeptEntity> {
-    return await this.rezeptRepository.save(rezept)
+    const rezeptEntity: RezeptEntity = {id: rezept.getId(), name: rezept.name, aufwand: rezept.aufwand}
+    return await this.rezeptRepository.save(rezeptEntity)
   }
 
   async delete(id: number): Promise<DeleteResult> {
