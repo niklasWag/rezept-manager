@@ -40,9 +40,13 @@ export class Menge {
     switch (this._einheit) {
       case MengenEinheit.Stück:
         return EinheitTyp.Anzahl
-      case MengenEinheit.g || MengenEinheit.kg:
+      case MengenEinheit.g:
         return EinheitTyp.Gewicht
-      case MengenEinheit.ml || MengenEinheit.l:
+      case MengenEinheit.kg:
+        return EinheitTyp.Gewicht
+      case MengenEinheit.ml:
+        return EinheitTyp.Volumen
+      case MengenEinheit.l:
         return EinheitTyp.Volumen
       default:
         throw new Error(`Typ der Maßeinheit ${this.einheit} konnte nicht ermittelt werden`)

@@ -1,17 +1,17 @@
 import { Identifizierbar } from "../interfaces/Identifizierbar"
-import { Zutat } from "./Zutat"
+import { RezeptZutat } from "./RezeptZutat"
 
 export class Rezept implements Identifizierbar {
   private _id: number
   name: string
   aufwand: Aufwand
-  zutaten: Zutat[]
+  rezeptZutaten: RezeptZutat[]
 
-  constructor (id: number, name: string, aufwand: Aufwand, zutaten: Zutat[]) {
+  constructor (id: number, name: string, aufwand: Aufwand, rezeptZutaten: RezeptZutat[]) {
     this._id = id
     this.name = name
     this.aufwand = aufwand
-    this.zutaten = zutaten
+    this.rezeptZutaten = rezeptZutaten
   }
 
   getId(): number {

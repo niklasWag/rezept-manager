@@ -2,23 +2,23 @@ import { Identifizierbar } from "../interfaces";
 import { Menge } from "./Menge";
 import { Zutat } from "./Zutat";
 
-export class RezeptZutat implements Identifizierbar {
-  private _id: number
+export class RezeptZutat {
+  private _rezeptId: number
   zutat: Zutat
   menge: Menge
 
-  constructor(id: number, zutat: Zutat, menge: Menge) {
-    this._id = id
+  constructor(rezeptId: number, zutat: Zutat, menge: Menge) {
+    this._rezeptId = rezeptId
     this.zutat = zutat
     this.menge = menge
   }
 
-  getId(): number {
-    return this._id
+  getRezeptId(): number {
+    return this._rezeptId
   }
 
-  setId(id: number): void {
-    this._id = id
+  setRezeptId(rezeptId: number): void {
+    this._rezeptId = rezeptId
   }
 
   getZutatId(): number {
