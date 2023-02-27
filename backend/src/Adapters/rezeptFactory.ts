@@ -30,14 +30,17 @@ export class RezeptFactory {
       const rezeptRepository = transactionalEntityManager.getRepository(RezeptEntity)
       const zutatRepository = transactionalEntityManager.getRepository(ZutatEntity)
       const rezeptZutatRepository = transactionalEntityManager.getRepository(RezeptZutatEntity)
+
       // create Rezept
       const dbRezept = await rezeptRepository.save(rezept)
       rezept.setId(dbRezept.id)
+
       // create Zutaten and RezeptZutaten
       const rezeptZutaten = rezept.rezeptZutaten
       await Promise.all(rezeptZutaten.map(async rezeptZutat => {
         const zutat = rezeptZutat.zutat
         const dbZutat = await zutatRepository.findOneBy({name: zutat.name, typ: zutat.typ})
+
         // create missing Zutat
         if (!dbZutat) {
           const erstellteZutat = await zutatRepository.save(zutat)
@@ -45,6 +48,7 @@ export class RezeptFactory {
         } else {
           zutat.setId(dbZutat.id)
         }
+
         // create RezeptZutaten
         const neueRezeptZutat: RezeptZutatEntity = {
           rezeptId: rezept.getId(),
@@ -53,11 +57,13 @@ export class RezeptFactory {
           mengeEinheit: rezeptZutat.menge.einheit,
           mengeTyp: rezeptZutat.menge.typ
         }
+        
         const dbRezeptZutat = await rezeptZutatRepository.save(neueRezeptZutat)
         rezeptZutat.zutat.setId(dbRezeptZutat.zutatId)
         rezeptZutat.setRezeptId(dbRezeptZutat.rezeptId)
       }))
     })
+
     return rezept
   }
 }
