@@ -40,11 +40,15 @@ export function Post (path: string): MethodDecorator {
 
         res.status(200).send(original);
       } catch (err: any) {
-        res.status(500).json({
-          message: 'An error occurred',
-          error: err.message,
-          stack: err.stack
-        })
+        if (err.message === 'body type error') {
+          res.status(400).send('Body does not match required type')
+        } else {
+          res.status(500).json({
+            message: 'An error occurred',
+            error: err.message,
+            stack: err.stack
+          })
+        }
       }
     }
 
