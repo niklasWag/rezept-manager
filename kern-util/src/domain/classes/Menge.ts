@@ -53,3 +53,8 @@ export class Menge {
     }
   }
 }
+
+export type MengeBodyJSON = {
+  wert: number,
+  einheit: MengenEinheit
+}

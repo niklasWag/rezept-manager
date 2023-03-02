@@ -1,5 +1,5 @@
 import { Identifizierbar } from "../interfaces/Identifizierbar"
-import { RezeptZutat } from "./RezeptZutat"
+import { RezeptZutat, RezeptZutatenBodyJSON } from "./RezeptZutat"
 
 export class Rezept implements Identifizierbar {
   private _id: number
@@ -21,6 +21,13 @@ export class Rezept implements Identifizierbar {
   setId(id: number): void {
     this._id = id
   }
+}
+
+export type RezeptBodyJSON = {
+  id: number,
+  name: string,
+  aufwand: Aufwand,
+  rezeptZutaten: RezeptZutatenBodyJSON[]
 }
 
 export enum Aufwand {

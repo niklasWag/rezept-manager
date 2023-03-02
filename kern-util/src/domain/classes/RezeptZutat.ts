@@ -1,6 +1,5 @@
-import { Identifizierbar } from "../interfaces";
-import { Menge } from "./Menge";
-import { Zutat } from "./Zutat";
+import { Menge, MengeBodyJSON } from "./Menge";
+import { Zutat, ZutatBodyJSON } from "./Zutat";
 
 export class RezeptZutat {
   private _rezeptId: number
@@ -24,4 +23,10 @@ export class RezeptZutat {
   getZutatId(): number {
     return this.zutat.getId()
   }
+}
+
+export type RezeptZutatenBodyJSON = {
+  rezeptId: number,
+  zutat: ZutatBodyJSON,
+  menge: MengeBodyJSON
 }

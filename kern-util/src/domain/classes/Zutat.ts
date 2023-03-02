@@ -31,3 +31,9 @@ export enum ZutatTyp {
   sonstiges = 'Sonstiges',
   getraenke = 'Getränke'
 }
+
+export type ZutatBodyJSON = {
+  id: number,
+  name: string,
+  typ: ZutatTyp
+}
