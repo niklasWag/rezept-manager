@@ -3,8 +3,8 @@ import { Get, Post } from './src/decorators'
 import { Server } from './src/server'
 import { dataSource } from './src/Adapters/datenbankAdapter'
 import { RezeptFactory } from './src/Adapters/rezeptFactory'
-import { Menge, Rezept, RezeptBodyJSON, RezeptZutat, Zutat } from 'kern-util'
-import { arraysEqual } from './src/helpers'
+import { RezeptBodyJSON } from 'kern-util'
+import { getAllRezepte, postRezept } from './src/Adapters/rezeptEndpoints'
 
 
 const rezeptFactory = RezeptFactory.getInstance()
@@ -42,20 +42,13 @@ class Routes {
     }
 
     @Post('/rezept')
-    async postRezept(req: Request<{}, {}, RezeptBodyJSON>, res: Response) {
-        const expectedKeys: string[] = [ 'id', 'name', 'aufwand', 'rezeptZutaten' ]
-        if (!arraysEqual(Object.keys(req.body), expectedKeys)) throw new Error('body type error')
+    async postRezept(req: Request<{}, {}, RezeptBodyJSON>) {
+        return await postRezept(req)
+    }
 
-        const rezeptData: RezeptBodyJSON = req.body
-        const rezeptZutaten: RezeptZutat[] = []
-        rezeptData.rezeptZutaten.forEach(rezeptZutat => {
-            const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ)
-            const menge: Menge = new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)
-            rezeptZutaten.push(new RezeptZutat(rezeptZutat.rezeptId, zutat, menge))
-        })
-        const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, rezeptZutaten)
-
-        return await rezeptFactory.createRezept(rezept)
+    @Get('/rezepte')
+    async getAllRezepte() {
+        return await getAllRezepte()
     }
 }
 

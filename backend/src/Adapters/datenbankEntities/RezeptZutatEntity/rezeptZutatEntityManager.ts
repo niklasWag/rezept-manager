@@ -25,6 +25,10 @@ export class RezeptZutatEntityManager {
     return await this.rezeptZutatRepository.findOneByOrFail({rezeptId, zutatId})
   }
 
+  async getByRezeptId(rezeptId: number): Promise<RezeptZutatEntity[]> {
+    return await this.rezeptZutatRepository.findBy({rezeptId})
+  }
+
   async save(rezeptZutatEntity: RezeptZutatEntity): Promise<RezeptZutatEntity> {
     return await this.rezeptZutatRepository.save(rezeptZutatEntity)
   }
