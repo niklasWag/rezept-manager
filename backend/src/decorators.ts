@@ -15,11 +15,15 @@ export function Get (path: string): MethodDecorator {
 
         res.status(200).send(original);
       } catch (err: any) {
-        res.status(500).json({
-          message: 'An error occurred',
-          error: err.message,
-          stack: err.stack
-        })
+        if (err.message === 'Invalid parameter') {
+          res.status(400).send('Invalid parameter')
+        } else {
+          res.status(500).json({
+            message: 'An error occurred',
+            error: err.message,
+            stack: err.stack
+          })
+        }
       }
     }
 
