@@ -7,15 +7,15 @@ const mockRezept = new Rezept(13000,
   Aufwand.einfach,
   [new RezeptZutat(13000, new Zutat(13000, 'testZutat', ZutatTyp.sonstiges), new Menge(5, MengenEinheit.Stück))]
 )
-let id: number
+
 const rezeptEntityManager = RezeptEntityManager.getInstance()
 
-beforeEach(async () => {
+beforeAll(async () => {
   await dataSource.initialize()
 })
 
-afterEach(async () => {
-  dataSource.destroy()
+afterAll(async () => {
+  await dataSource.destroy()
 })
 
 describe('test RezeptEntityManager', () => {
@@ -25,8 +25,8 @@ describe('test RezeptEntityManager', () => {
 
   it('should create entities', async () => {
     const res = await rezeptEntityManager.save(mockRezept)
-    id = res.id
     expect(typeof res).toBe('object')
+    await rezeptEntityManager.delete(res.id)
   })
 
   it('should get all Rezepte', async () => {
@@ -34,10 +34,13 @@ describe('test RezeptEntityManager', () => {
   })
 
   it('should get Rezept by id', async () => {
-    expect(typeof(await rezeptEntityManager.getById(id))).toBe('object')
+    const res = await rezeptEntityManager.save(mockRezept)
+    expect(typeof(await rezeptEntityManager.getById(res.id))).toBe('object')
+    await rezeptEntityManager.delete(res.id)
   })
 
   it('should delete a Rezept by id', async () => {
-    expect(await rezeptEntityManager.delete(id)).toBeTruthy()
+    const res = await rezeptEntityManager.save(mockRezept)
+    expect(await rezeptEntityManager.delete(res.id)).toBeTruthy()
   })
 })
