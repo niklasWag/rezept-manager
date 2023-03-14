@@ -51,3 +51,25 @@ export async function getAllRezepte() {
   
   return rezepte
 }
+
+export async function getRezept(req: Request): Promise<Rezept> {
+  const id: number = parseInt(req.params.id)
+  if (Number.isNaN(id)) throw Error('Invalid parameter')
+
+  const rezeptData =  await rezeptEntityManager.getById(id)
+  const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezeptData.id)
+  const rezeptZutaten: RezeptZutat[] = []
+  await Promise.all(rezeptZutatData.map(async rezeptZutat => {
+    const zutatData = await zutatEntityManager.getById(rezeptZutat.zutatId)
+    rezeptZutaten.push(
+      new RezeptZutat(
+        rezeptZutat.rezeptId,
+        new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
+        new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
+        )
+      )
+  }))
+
+  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, rezeptZutaten)
+  return rezept
+}
