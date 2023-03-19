@@ -5,6 +5,7 @@ import { dataSource } from './src/Adapters/datenbankAdapter'
 import { RezeptFactory } from './src/Adapters/rezeptFactory'
 import { RezeptBodyJSON } from 'kern-util'
 import { getAllRezepte, getRezept, postRezept } from './src/Adapters/rezeptEndpoints'
+import { getZutaten } from './src/Adapters/zutatEndpoints'
 
 
 const rezeptFactory = RezeptFactory.getInstance()
@@ -54,6 +55,11 @@ class Routes {
     @Get('/rezept/:id')
     async getRezept(req: Request) {
         return await getRezept(req)
+    }
+
+    @Get('/zutaten')
+    async getZutaten() {
+        return await getZutaten()
     }
 }
 
