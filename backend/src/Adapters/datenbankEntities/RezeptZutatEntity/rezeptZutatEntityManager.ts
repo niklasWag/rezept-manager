@@ -36,4 +36,8 @@ export class RezeptZutatEntityManager {
   async delete(rezeptId: number, zutatId: number): Promise<DeleteResult> {
     return await this.rezeptZutatRepository.delete({rezeptId, zutatId})
   }
+
+  async deleteByRezeptId(rezeptId: number): Promise<DeleteResult> {
+    return await this.rezeptZutatRepository.delete({rezeptId})
+  }
 }

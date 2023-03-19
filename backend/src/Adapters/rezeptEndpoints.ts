@@ -73,3 +73,32 @@ export async function getRezept(req: Request): Promise<Rezept> {
   const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, rezeptZutaten)
   return rezept
 }
+
+export async function deleteRezept(req: Request) {
+  const id: number = parseInt(req.params.id)
+  if (Number.isNaN(id)) throw Error('Invalid parameter')
+
+  try {
+    await rezeptEntityManager.getById(id)
+  } catch(err) {
+    throw Error('Entity not found error')
+  }
+
+  try {
+    await rezeptEntityManager.delete(id)
+    const rezeptZutaten = await rezeptZutatEntityManager.getByRezeptId(id)
+    const zutatenIds = rezeptZutaten.map(rezeptZutat => rezeptZutat.zutatId)
+    await rezeptZutatEntityManager.deleteByRezeptId(id)
+
+    const zutatenToBeDeleted: number[] = []
+    const allRezeptZutaten = await rezeptZutatEntityManager.getAll()
+    zutatenIds.forEach(id => {
+      if(!(allRezeptZutaten.find(obj => obj.zutatId === id))) zutatenToBeDeleted.push(id)
+    })
+    await Promise.all(zutatenToBeDeleted.map(async zutatId => {
+      await zutatEntityManager.delete(zutatId)
+    }))
+  } catch(err) {
+    throw Error('Unable to delete rezept')
+  }
+}

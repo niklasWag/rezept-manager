@@ -100,7 +100,7 @@ export function Delete (path: string): MethodDecorator {
       try {
         const original = await descriptor.value(req, res);
 
-        res.status(200).send(original);
+        res.status(204).send(original);
       } catch (err: any) {
         if (err.message === 'Entity not found error') {
           res.status(404).send('Entity to be deleted was not found')

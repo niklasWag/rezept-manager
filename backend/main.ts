@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
-import { Get, Post } from './src/decorators'
+import { Delete, Get, Post } from './src/decorators'
 import { Server } from './src/server'
 import { dataSource } from './src/Adapters/datenbankAdapter'
 import { RezeptFactory } from './src/Adapters/rezeptFactory'
 import { RezeptBodyJSON } from 'kern-util'
-import { getAllRezepte, getRezept, postRezept } from './src/Adapters/rezeptEndpoints'
+import { deleteRezept, getAllRezepte, getRezept, postRezept } from './src/Adapters/rezeptEndpoints'
 import { getZutaten } from './src/Adapters/zutatEndpoints'
 
 
@@ -55,6 +55,11 @@ class Routes {
     @Get('/rezept/:id')
     async getRezept(req: Request) {
         return await getRezept(req)
+    }
+
+    @Delete('/rezept/:id')
+    async deleteRezept(req: Request) {
+        return await deleteRezept(req)
     }
 
     @Get('/zutaten')
