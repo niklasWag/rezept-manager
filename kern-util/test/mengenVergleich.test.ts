@@ -23,6 +23,13 @@ describe('Test Mengen vergleichen', () => {
     expect(mengeA.entspricht(mengeB)).toBe(false)
   })
 
+  it('Should return true if Mengen are equal', () => {
+    const mengeA = new Menge(1, MengenEinheit.kg)
+    const mengeB = new Menge(1000, MengenEinheit.g)
+    const mockNormalisieren = (mengenNormalisieren as jest.Mock).mockReturnValue(1000)
+    expect(mengeA.entspricht(mengeB)).toBe(true)
+  })
+
   it('Should not compare Mengen with different types', () => {
     const mengeA = new Menge(10, MengenEinheit.kg)
     const mengeB = new Menge(10, MengenEinheit.l)
