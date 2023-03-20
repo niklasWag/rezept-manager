@@ -13,18 +13,18 @@ const rezeptZutatEntityManager = RezeptZutatEntityManager.getInstance()
 
 export async function postRezept(req: Request) {
   const expectedKeys: string[] = [ 'id', 'name', 'aufwand', 'rezeptZutaten' ]
-        if (!arraysEqual(Object.keys(req.body), expectedKeys)) throw new Error('body type error')
+  if (!arraysEqual(Object.keys(req.body), expectedKeys)) throw new Error('body type error')
 
-        const rezeptData: RezeptBodyJSON = req.body
-        const rezeptZutaten: RezeptZutat[] = []
-        rezeptData.rezeptZutaten.forEach(rezeptZutat => {
-            const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ)
-            const menge: Menge = new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)
-            rezeptZutaten.push(new RezeptZutat(rezeptZutat.rezeptId, zutat, menge))
-        })
-        const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, rezeptZutaten)
+  const rezeptData: RezeptBodyJSON = req.body
+  const rezeptZutaten: RezeptZutat[] = []
+  rezeptData.rezeptZutaten.forEach(rezeptZutat => {
+    const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ)
+    const menge: Menge = new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)
+    rezeptZutaten.push(new RezeptZutat(rezeptZutat.rezeptId, zutat, menge))
+  })
+  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, rezeptZutaten)
 
-        return await rezeptFactory.createRezept(rezept)
+  return await rezeptFactory.createRezept(rezept)
 }
 
 export async function getAllRezepte() {
@@ -101,4 +101,20 @@ export async function deleteRezept(req: Request) {
   } catch(err) {
     throw Error('Unable to delete rezept')
   }
+}
+
+export async function putRezept(req: Request) {
+  const expectedKeys: string[] = [ 'id', 'name', 'aufwand', 'rezeptZutaten' ]
+  if (!arraysEqual(Object.keys(req.body), expectedKeys)) throw new Error('body type error')
+
+  const rezeptData: RezeptBodyJSON = req.body
+  const rezeptZutaten: RezeptZutat[] = []
+  rezeptData.rezeptZutaten.forEach(rezeptZutat => {
+    const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ)
+    const menge: Menge = new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)
+    rezeptZutaten.push(new RezeptZutat(rezeptZutat.rezeptId, zutat, menge))
+  })
+  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, rezeptZutaten)
+
+  return await rezeptFactory.updateRezept(rezept)
 }
