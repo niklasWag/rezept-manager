@@ -17,8 +17,8 @@ describe('Test Mengen vergleichen', () => {
   })
 
   it('Should return false for Mengen with different amounts', () => {
-    const mengeA = new Menge(10, MengenEinheit.g)
-    const mengeB = new Menge(100, MengenEinheit.g)
+    const mengeA = new Menge(10, MengenEinheit.ml)
+    const mengeB = new Menge(100, MengenEinheit.ml)
     const mockNormalisieren = (mengenNormalisieren as jest.Mock).mockReturnValueOnce(10).mockReturnValueOnce(100)
     expect(mengeA.entspricht(mengeB)).toBe(false)
   })
