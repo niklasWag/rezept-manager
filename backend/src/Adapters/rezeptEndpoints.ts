@@ -1,5 +1,5 @@
 import { Request } from "express"
-import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand } from "kern-util"
+import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand, RezeptZutatenBodyJSON } from "kern-util"
 import { arraysEqual } from "../helpers"
 import { RezeptEntityManager } from "./datenbankEntities/RezeptEntity/rezeptEntityManager"
 import { RezeptZutatEntityManager } from "./datenbankEntities/RezeptZutatEntity/rezeptZutatEntityManager"
@@ -27,7 +27,7 @@ export async function postRezept(req: Request) {
   return await rezeptFactory.createRezept(rezept)
 }
 
-export async function getAllRezepte() {
+export async function getAllRezepte(): Promise<RezeptBodyJSON[]> {
   const rezepte: Rezept[] = []
   const rezeptData = await rezeptEntityManager.getAll()
 
@@ -48,11 +48,14 @@ export async function getAllRezepte() {
 
     rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand as Aufwand, rezeptZutaten))
   }))
+
+  const response: RezeptBodyJSON[] = []
+  rezepte.forEach(rezept => response.push(rezept.createRezeptBodyJSON()))
   
-  return rezepte
+  return response
 }
 
-export async function getRezept(req: Request): Promise<Rezept> {
+export async function getRezept(req: Request): Promise<RezeptBodyJSON> {
   const id: number = parseInt(req.params.id)
   if (Number.isNaN(id)) throw Error('Invalid parameter')
 
@@ -71,7 +74,7 @@ export async function getRezept(req: Request): Promise<Rezept> {
   }))
 
   const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, rezeptZutaten)
-  return rezept
+  return rezept.createRezeptBodyJSON()
 }
 
 export async function deleteRezept(req: Request) {
