@@ -20,8 +20,7 @@ const tasks = new Listr([
         title: 'Install frontend dependencies',
         task: async () => {
             await exec('cd frontend && npm i')
-        },
-        skip: () => true
+        }
     }
 ])
 
