@@ -21,6 +21,32 @@ export class Rezept implements Identifizierbar {
   setId(id: number): void {
     this._id = id
   }
+
+  createRezeptBodyJSON(): RezeptBodyJSON {
+    const rezeptZutatenJSON: RezeptZutatenBodyJSON[] = []
+    this.rezeptZutaten.forEach(rezeptZutat => {
+      const rezeptZutatJSON: RezeptZutatenBodyJSON = {
+        rezeptId: rezeptZutat.getRezeptId(),
+        zutat: {
+          id: rezeptZutat.zutat.getId(),
+          name: rezeptZutat.zutat.name,
+          typ: rezeptZutat.zutat.typ
+        },
+        menge: {
+          wert: rezeptZutat.menge.wert,
+          einheit: rezeptZutat.menge.einheit
+        }
+      }
+      rezeptZutatenJSON.push(rezeptZutatJSON)
+    })
+    const rezeptJSON: RezeptBodyJSON = {
+      id: this.getId(),
+      name: this.name,
+      aufwand: this.aufwand,
+      rezeptZutaten: rezeptZutatenJSON
+    }
+    return rezeptJSON
+  }
 }
 
 export type RezeptBodyJSON = {
