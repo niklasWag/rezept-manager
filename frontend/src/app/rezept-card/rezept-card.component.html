@@ -1,1 +1,11 @@
-<p>rezept-card works!</p>
+<div class="border">
+  <div class="header">
+    <span>{{rezept.getId()}} - {{rezept.name}}</span>
+  </div>
+  <hr>
+  <div class="zutaten">
+    <ng-container *ngFor="let zutat of rezept.rezeptZutaten">
+      <span>{{zutat.zutat.name}}: {{zutat.menge.wert}} {{zutat.menge.einheit}}</span>
+    </ng-container>
+  </div>
+</div>

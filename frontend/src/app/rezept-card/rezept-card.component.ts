@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Rezept } from 'kern-util/lib/domain';
 
 @Component({
   selector: 'app-rezept-card',
@@ -6,5 +7,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./rezept-card.component.css']
 })
 export class RezeptCardComponent {
-  @Input() public obj: any
+  @Input() public rezept!: Rezept
 }

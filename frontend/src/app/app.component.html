@@ -2,5 +2,5 @@
   <a><h1>Rezept Manager</h1></a>
 </mat-toolbar>
 <div id="content">
-  <app-rezept-card *ngFor="let rezept of rezepte"></app-rezept-card>
+  <app-rezept-card *ngFor="let rezept of rezepte" [rezept]="rezept"></app-rezept-card>
 </div>

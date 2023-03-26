@@ -29,5 +29,7 @@ export class AppComponent {
       })
       this.rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand, rezeptZutaten))
     })
+    //sort alphabetically
+    this.rezepte.sort((a,b) => a.name.localeCompare(b.name))
   }
 }
