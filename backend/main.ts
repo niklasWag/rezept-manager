@@ -4,7 +4,7 @@ import { Server } from './src/server'
 import { dataSource } from './src/Adapters/datenbankAdapter'
 import { RezeptFactory } from './src/Adapters/rezeptFactory'
 import { RezeptBodyJSON } from 'kern-util'
-import { deleteRezept, getAllRezepte, getRezept, postRezept, putRezept } from './src/Adapters/rezeptEndpoints'
+import { deleteRezept, getAllRezepte, getRezept, postRezept, putRezept, searchRezepte } from './src/Adapters/rezeptEndpoints'
 import { getZutaten } from './src/Adapters/zutatEndpoints'
 
 
@@ -70,6 +70,11 @@ class Routes {
     @Get('/zutaten')
     async getZutaten() {
         return await getZutaten()
+    }
+
+    @Post('/rezepte/search')
+    async searchRezepte(req: Request) {
+        return await searchRezepte(req)
     }
 }
 

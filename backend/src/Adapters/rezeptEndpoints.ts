@@ -1,5 +1,5 @@
 import { Request } from "express"
-import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand, RezeptZutatenBodyJSON } from "kern-util"
+import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand } from "kern-util"
 import { arraysEqual } from "../helpers"
 import { RezeptEntityManager } from "./datenbankEntities/RezeptEntity/rezeptEntityManager"
 import { RezeptZutatEntityManager } from "./datenbankEntities/RezeptZutatEntity/rezeptZutatEntityManager"
@@ -120,4 +120,10 @@ export async function putRezept(req: Request) {
   const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, rezeptZutaten)
 
   return await rezeptFactory.updateRezept(rezept)
+}
+
+export async function searchRezepte(req: Request) {
+  const zutatenIds: number[] = []
+  //if (req.body.zutaten) req.body.zut
+  return req.body
 }
