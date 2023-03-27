@@ -1,0 +1,47 @@
+<div id="content">
+    <h2>Neues Rezept</h2>
+    <div id="form">
+        <div class="inline">
+            <mat-form-field appearance="outline">
+                <label>Name</label>
+                <input matInput type="text" [(ngModel)]="name">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <label>Aufwand</label>
+                <mat-select [(value)]="aufwand">
+                    <mat-option value="einfach">Einfach</mat-option>
+                    <mat-option value="mittel">Mittel</mat-option>
+                    <mat-option value="schwer">Schwer</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div id="zutaten">
+            <table mat-table [dataSource]="rezeptZutaten">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let zutat">{{zutat.name}}</td>
+                </ng-container>
+                <ng-container matColumnDef="typ">
+                    <th mat-header-cell *matHeaderCellDef>Typ</th>
+                    <td mat-cell *matCellDef="let zutat">{{zutat.typ}}</td>
+                </ng-container>
+                <ng-container matColumnDef="menge">
+                    <th mat-header-cell *matHeaderCellDef>Menge</th>
+                    <td mat-cell *matCellDef="let zutat">{{zutat.menge.wert}} {{zutat.menge.einheit}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['name', 'typ', 'menge']"></tr>
+                <tr mat-row *matRowDef="let row; columns:['name', 'typ', 'menge'];"></tr>
+                <tr mat-row *matNoDataRow><td mat-cell colspan="9999">Kein Rezept</td></tr>
+            </table>
+            <mat-form-field appearance="outline">
+                <label>Zutaten</label>
+                <input matInput>
+            </mat-form-field>
+        </div>
+    </div>
+    <mat-dialog-actions>
+        <button mat-button (click)="abort()">Abbrechen</button>
+        <button mat-button (click)="save()">Speichern</button>
+    </mat-dialog-actions>
+</div>

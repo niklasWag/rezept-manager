@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Rezept } from 'kern-util';
-import { Menge, RezeptBodyJSON, RezeptZutat, Zutat } from 'kern-util/lib/domain';
+import { Menge, RezeptBodyJSON, RezeptZutat, Zutat, ZutatBodyJSON } from 'kern-util/lib/domain';
+import { RezeptFormComponent } from './rezept-form/rezept-form.component';
 import { RezeptService } from './services/rezept.service';
+import { ZutatService } from './services/zutat.service';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +14,15 @@ import { RezeptService } from './services/rezept.service';
 export class AppComponent {
   title = 'frontend';
   rezepteData: RezeptBodyJSON[] = []
+  zutatenData: ZutatBodyJSON[] = []
   rezepte: Rezept[] = []
+  zutaten: Zutat[] = []
+  queryJSON = {}
+  zutatenQuery: any[] = []
 
-  constructor(private readonly rezeptService: RezeptService) {
+  constructor(private readonly rezeptService: RezeptService, private readonly zutatService: ZutatService, public matDialog: MatDialog) {
     rezeptService.getAll().subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
+    zutatService.getAll().subscribe({next: res => this.zutatenData = res, complete: () => this.createZutaten()})
   }
 
   createRezepte() {
@@ -31,5 +39,19 @@ export class AppComponent {
     })
     //sort alphabetically
     this.rezepte.sort((a,b) => a.name.localeCompare(b.name))
+  }
+
+  createZutaten() {
+    this.zutatenData.forEach(zutat => this.zutaten.push(new Zutat(zutat.id, zutat.name, zutat.typ)))
+    console.log(this.zutaten)
+  }
+
+  buildQuery() {
+    console.log(this.zutatenQuery)
+  }
+
+  openDialog() {
+    const dialogRef = this.matDialog.open(RezeptFormComponent, {disableClose: true})
+    dialogRef.afterClosed().subscribe({next: x => console.log(x)})
   }
 }
