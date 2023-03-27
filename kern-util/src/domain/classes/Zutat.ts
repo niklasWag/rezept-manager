@@ -18,6 +18,15 @@ export class Zutat implements Identifizierbar {
   setId(id: number): void {
     this._id = id
   }
+
+  createZutatBodyJSON(): ZutatBodyJSON {
+    const zutatJSON = {
+      id: this.getId(),
+      name: this.name,
+      typ: this.typ
+    }
+    return zutatJSON
+  }
 }
 
 export enum ZutatTyp {

@@ -36,6 +36,14 @@ export class Menge {
     return this._typ
   }
 
+  createMengeBodyJSON(): MengeBodyJSON {
+    const mengeJSON: MengeBodyJSON = {
+      wert: this.wert,
+      einheit: this.einheit
+    }
+    return mengeJSON
+  }
+
   private _getTyp(): EinheitTyp {
     switch (this._einheit) {
       case MengenEinheit.Stück:

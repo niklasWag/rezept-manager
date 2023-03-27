@@ -23,9 +23,18 @@ export class RezeptZutat {
   getZutatId(): number {
     return this.zutat.getId()
   }
+
+  createRezeptZutatBodyJSON(): RezeptZutatBodyJSON {
+    const rezeptZutatJSON: RezeptZutatBodyJSON = {
+      rezeptId: this.getRezeptId(),
+      zutat: this.zutat.createZutatBodyJSON(),
+      menge: this.menge.createMengeBodyJSON()
+    }
+    return rezeptZutatJSON
+  }
 }
 
-export type RezeptZutatenBodyJSON = {
+export type RezeptZutatBodyJSON = {
   rezeptId: number,
   zutat: ZutatBodyJSON,
   menge: MengeBodyJSON
