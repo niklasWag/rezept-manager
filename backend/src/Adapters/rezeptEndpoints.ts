@@ -1,5 +1,6 @@
 import { Request } from "express"
 import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand } from "kern-util"
+import { rezeptSuchen } from "../Application Code/rezeptSuche"
 import { arraysEqual } from "../helpers"
 import { RezeptEntityManager } from "./datenbankEntities/RezeptEntity/rezeptEntityManager"
 import { RezeptZutatEntityManager } from "./datenbankEntities/RezeptZutatEntity/rezeptZutatEntityManager"
@@ -18,7 +19,7 @@ export async function postRezept(req: Request) {
   const rezeptData: RezeptBodyJSON = req.body
   const rezeptZutaten: RezeptZutat[] = []
   rezeptData.rezeptZutaten.forEach(rezeptZutat => {
-    const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ)
+    const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ as ZutatTyp)
     const menge: Menge = new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)
     rezeptZutaten.push(new RezeptZutat(rezeptZutat.rezeptId, zutat, menge))
   })
@@ -123,7 +124,37 @@ export async function putRezept(req: Request) {
 }
 
 export async function searchRezepte(req: Request) {
-  const zutatenIds: number[] = []
-  //if (req.body.zutaten) req.body.zut
-  return req.body
+  let zutatenIds: number[] = []
+  let aufwand: string[] = []
+  if (req.body.zutaten && Array.isArray(req.body.zutaten)) zutatenIds = req.body.zutaten
+  if (req.body.aufwand && Array.isArray(req.body.aufwand)) aufwand = req.body.aufwand
+  if (!req.body.zutaten && !req.body.aufwand) throw Error('body type error')
+  
+  const rezepte: Rezept[] = []
+  const rezeptData = await rezeptEntityManager.getAll()
+
+  await Promise.all(rezeptData.map(async rezept => {
+    const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezept.id)
+    const rezeptZutaten: RezeptZutat[] = []
+
+    await Promise.all(rezeptZutatData.map(async rezeptZutat => {
+      const zutatData = await zutatEntityManager.getById(rezeptZutat.zutatId)
+      rezeptZutaten.push(
+        new RezeptZutat(
+          rezeptZutat.rezeptId,
+          new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
+          new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
+          )
+        )
+    }))
+
+    rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand as Aufwand, rezeptZutaten))
+  }))
+
+  const filteredRezepte = rezeptSuchen(rezepte, {zutatenIds: zutatenIds, aufwand: aufwand})
+
+  const response: RezeptBodyJSON[] = []
+  filteredRezepte.forEach(rezept => response.push(rezept.createRezeptBodyJSON()))
+  
+  return response
 }
