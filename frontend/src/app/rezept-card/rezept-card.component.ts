@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Rezept } from 'kern-util/lib/domain';
 
 @Component({
@@ -8,4 +8,14 @@ import { Rezept } from 'kern-util/lib/domain';
 })
 export class RezeptCardComponent {
   @Input() public rezept!: Rezept
+  @Output() delete = new EventEmitter<number>()
+  @Output() update = new EventEmitter<number>()
+
+  deleteRezept() {
+    this.delete.emit(this.rezept.getId())
+  }
+
+  editRezept() {
+    this.update.emit(this.rezept.getId())
+  }
 }

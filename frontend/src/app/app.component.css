@@ -4,3 +4,14 @@
   justify-content: space-around;
   flex-wrap: wrap;
 }
+
+#filterBar {
+  margin: 1rem .5rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#filterBar > * {
+  margin-right: .5rem;
+}

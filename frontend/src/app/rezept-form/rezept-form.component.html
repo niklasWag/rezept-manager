@@ -2,11 +2,11 @@
     <h2>Neues Rezept</h2>
     <div id="form">
         <div class="inline">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
                 <label>Name</label>
                 <input matInput type="text" [(ngModel)]="name">
             </mat-form-field>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
                 <label>Aufwand</label>
                 <mat-select [(value)]="aufwand">
                     <mat-option value="einfach">Einfach</mat-option>
@@ -16,28 +16,69 @@
             </mat-form-field>
         </div>
         <div id="zutaten">
-            <table mat-table [dataSource]="rezeptZutaten">
+            <h3>Zutaten</h3>
+            <table mat-table [dataSource]="tableData">
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                      </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Name</th>
-                    <td mat-cell *matCellDef="let zutat">{{zutat.name}}</td>
+                    <td mat-cell *matCellDef="let zutat">{{zutat.zutat.name}}</td>
                 </ng-container>
                 <ng-container matColumnDef="typ">
                     <th mat-header-cell *matHeaderCellDef>Typ</th>
-                    <td mat-cell *matCellDef="let zutat">{{zutat.typ}}</td>
+                    <td mat-cell *matCellDef="let zutat">{{zutat.zutat.typ}}</td>
                 </ng-container>
                 <ng-container matColumnDef="menge">
                     <th mat-header-cell *matHeaderCellDef>Menge</th>
                     <td mat-cell *matCellDef="let zutat">{{zutat.menge.wert}} {{zutat.menge.einheit}}</td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="['name', 'typ', 'menge']"></tr>
-                <tr mat-row *matRowDef="let row; columns:['name', 'typ', 'menge'];"></tr>
-                <tr mat-row *matNoDataRow><td mat-cell colspan="9999">Kein Rezept</td></tr>
+                <tr mat-header-row *matHeaderRowDef="['select', 'name', 'typ', 'menge']"></tr>
+                <tr mat-row *matRowDef="let row; columns:['select', 'name', 'typ', 'menge'];"></tr>
+                <tr class="mat-row" *matNoDataRow><td class="mat-cell" colspan="9999">Keine Zutaten</td></tr>
             </table>
-            <mat-form-field appearance="outline">
-                <label>Zutaten</label>
-                <input matInput>
-            </mat-form-field>
+            <button mat-mini-fab (click)="deleteZutat()"><mat-icon>delete</mat-icon></button>
+            <div class="inline">
+                <mat-form-field appearance="fill">
+                    <label>Name</label>
+                    <input matInput [matAutocomplete]="auto" [(ngModel)]="zutatName" [formControl]="zutatNameFormControl">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="autocompleteSelected($event)">
+                        <mat-option *ngFor="let zutat of filteredZutaten | async" [value]="zutat">
+                            <span>{{zutat.name}}</span> |
+                            <small>{{zutat.typ}}</small>
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <label>Typ</label>
+                    <mat-select [(value)]="zutatTyp">
+                        <mat-option *ngFor="let typ of zutatTypen" [value]="typ">{{typ}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <label>Menge</label>
+                    <input type="number" step=".01" matInput [(ngModel)]="mengeWert">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <label>Einheit</label>
+                    <mat-select [(value)]="mengeEinheit">
+                        <mat-option *ngFor="let val of mengenEinheiten" [value]="val">{{val}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-fab (click)="saveZutat()"><mat-icon>add</mat-icon></button>
+            </div>
         </div>
     </div>
     <mat-dialog-actions>

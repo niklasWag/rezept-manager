@@ -26,6 +26,7 @@ export class AppComponent {
   }
 
   createRezepte() {
+    this.rezepte = []
     this.rezepteData.forEach(rezept => {
       //create RezeptZutaten
       const rezeptZutaten: RezeptZutat[] = []
@@ -43,7 +44,6 @@ export class AppComponent {
 
   createZutaten() {
     this.zutatenData.forEach(zutat => this.zutaten.push(new Zutat(zutat.id, zutat.name, zutat.typ)))
-    console.log(this.zutaten)
   }
 
   buildQuery() {
@@ -52,6 +52,24 @@ export class AppComponent {
 
   openDialog() {
     const dialogRef = this.matDialog.open(RezeptFormComponent, {disableClose: true})
-    dialogRef.afterClosed().subscribe({next: x => console.log(x)})
+    dialogRef.afterClosed().subscribe({next: x => {
+      if (x) {
+        const body = (x as Rezept).createRezeptBodyJSON()
+        this.rezeptService.post(body).subscribe({complete: () => {
+          this.rezeptService.getAll().subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
+        }})
+      }
+    }})
+  }
+
+  updateRezept(id: number) {
+    console.log(id)
+  }
+
+  deleteRezept(id: number) {
+    console.log('delete', id)
+    this.rezeptService.delete(id).subscribe({complete: () => {
+      this.rezeptService.getAll().subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
+    }})
   }
 }

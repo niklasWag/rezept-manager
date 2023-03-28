@@ -1,14 +1,16 @@
 <mat-toolbar color="primary">
   <span>Rezept Manager</span>
 </mat-toolbar>
-<div id="content">
-  <app-rezept-card *ngFor="let rezept of rezepte" [rezept]="rezept"></app-rezept-card>
+<div id="filterBar">
+  <mat-form-field appearance="outline">
+    <mat-select multiple [(value)]="zutatenQuery" (selectionChange)="buildQuery()">
+      <mat-option *ngFor="let zutat of zutaten" [value]="zutat.getId()">{{zutat.name}} - {{zutat.typ}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button color="primary" mat-fab (click)="openDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
-<mat-form-field appearance="outline">
-  <mat-select multiple [(value)]="zutatenQuery" (selectionChange)="buildQuery()">
-    <mat-option *ngFor="let zutat of zutaten" [value]="zutat.getId()">{{zutat.name}} - {{zutat.typ}}</mat-option>
-  </mat-select>
-</mat-form-field>
-<button color="primary" mat-fab (click)="openDialog()">
-  <mat-icon>add</mat-icon>
-</button>
+<div id="content">
+  <app-rezept-card *ngFor="let rezept of rezepte" [rezept]="rezept" (update)="updateRezept($event)" (delete)="deleteRezept($event)"></app-rezept-card>
+</div>

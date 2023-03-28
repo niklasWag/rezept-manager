@@ -5,5 +5,18 @@
 #form {
     display: flex;
     flex-direction: column;
-    
+}
+
+#form * {
+    margin: .5rem
+}
+
+#form table {
+    margin-bottom: 3rem;
+}
+
+.inline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

@@ -14,4 +14,12 @@ export class RezeptService {
   getAll(): Observable<RezeptBodyJSON[]> {
     return this.httpClient.get<RezeptBodyJSON[]>(`${environment.apiUrl}/rezepte`)
   }
+
+  post(rezeptJSON: RezeptBodyJSON): Observable<any> {
+    return this.httpClient.post(`${environment.apiUrl}/rezept`, rezeptJSON)
+  }
+
+  delete(id: number): Observable<any> {
+    return this.httpClient.delete(`${environment.apiUrl}/rezept/${id}`)
+  }
 }

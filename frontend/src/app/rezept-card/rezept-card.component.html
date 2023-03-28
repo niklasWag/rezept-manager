@@ -8,4 +8,7 @@
       <span>{{zutat.zutat.name}}: {{zutat.menge.wert}} {{zutat.menge.einheit}}</span>
     </ng-container>
   </div>
+  <hr>
+  <button mat-icon-button (click)="editRezept()"><mat-icon>edit</mat-icon></button>
+  <button mat-icon-button (click)="deleteRezept()"><mat-icon>delete</mat-icon></button>
 </div>
