@@ -47,7 +47,6 @@ describe('test rezeptSuche', () => {
                 'mittel'
             ]
         }
-        console.log(rezeptSuchen(mockRezepte, filter))
         expect(rezeptSuchen(mockRezepte, filter).includes(mockRezept2)).toBe(true)
     })
 
