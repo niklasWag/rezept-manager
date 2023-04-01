@@ -3,10 +3,18 @@
 </mat-toolbar>
 <div id="filterBar">
   <mat-form-field appearance="outline">
-    <mat-select multiple [(value)]="zutatenQuery" (selectionChange)="buildQuery()">
+    <mat-select multiple [(value)]="zutatenQuery">
       <mat-option *ngFor="let zutat of zutaten" [value]="zutat.getId()">{{zutat.name}} - {{zutat.typ}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-select multiple="" [(value)]="aufwand">
+      <mat-option value="einfach">Einfach</mat-option>
+      <mat-option value="mittel">Mittel</mat-option>
+      <mat-option value="schwer">Schwer</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-fab color="primary" (click)="buildQuery()"><mat-icon>search</mat-icon></button>
   <button color="primary" mat-fab (click)="openDialog()">
     <mat-icon>add</mat-icon>
   </button>

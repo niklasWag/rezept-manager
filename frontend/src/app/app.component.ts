@@ -19,6 +19,7 @@ export class AppComponent {
   zutaten: Zutat[] = []
   queryJSON = {}
   zutatenQuery: any[] = []
+  aufwand: string[] = []
 
   constructor(private readonly rezeptService: RezeptService, private readonly zutatService: ZutatService, public matDialog: MatDialog) {
     rezeptService.getAll().subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
@@ -47,7 +48,8 @@ export class AppComponent {
   }
 
   buildQuery() {
-    console.log(this.zutatenQuery)
+    const filter = { zutaten: this.zutatenQuery, aufwand: this.aufwand}
+    this.rezeptService.search(filter).subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
   }
 
   openDialog() {

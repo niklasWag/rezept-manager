@@ -22,4 +22,8 @@ export class RezeptService {
   delete(id: number): Observable<any> {
     return this.httpClient.delete(`${environment.apiUrl}/rezept/${id}`)
   }
+
+  search(filter: any): Observable<RezeptBodyJSON[]> {
+    return this.httpClient.post<RezeptBodyJSON[]>(`${environment.apiUrl}/rezepte/search`, filter)
+  }
 }
