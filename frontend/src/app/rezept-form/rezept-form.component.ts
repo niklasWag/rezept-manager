@@ -100,6 +100,10 @@ export class RezeptFormComponent {
     const rezeptZutat = new RezeptZutat(0, new Zutat(0, this.zutatName, this.zutatTyp as ZutatTyp), new Menge(this.mengeWert, this.mengeEinheit as MengenEinheit))
     this.rezeptZutaten.push(rezeptZutat)
     this.tableData.data = this.rezeptZutaten
+    this.zutatNameFormControl.setValue('')
+    this.zutatTyp = ''
+    this.mengeWert = 0
+    this.mengeEinheit = ''
   }
 
   abort() {
