@@ -37,6 +37,7 @@ export class AppComponent {
           new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ),
           new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)))
       })
+      rezeptZutaten.sort((a,b) => a.zutat.name.localeCompare(b.zutat.name))
       this.rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand, rezeptZutaten))
     })
     //sort alphabetically
@@ -45,6 +46,7 @@ export class AppComponent {
 
   createZutaten() {
     this.zutatenData.forEach(zutat => this.zutaten.push(new Zutat(zutat.id, zutat.name, zutat.typ)))
+    this.zutaten.sort((a,b) => a.name.localeCompare(b.name))
   }
 
   buildQuery() {
@@ -59,6 +61,7 @@ export class AppComponent {
         const body = (x as Rezept).createRezeptBodyJSON()
         this.rezeptService.post(body).subscribe({complete: () => {
           this.rezeptService.getAll().subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
+          this.zutatService.getAll().subscribe({next: res => this.zutatenData = res, complete: () => this.createZutaten()})
         }})
       }
     }})
@@ -72,6 +75,7 @@ export class AppComponent {
     console.log('delete', id)
     this.rezeptService.delete(id).subscribe({complete: () => {
       this.rezeptService.getAll().subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
+      this.zutatService.getAll().subscribe({next: res => this.zutatenData = res, complete: () => this.createZutaten()})
     }})
   }
 }
