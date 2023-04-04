@@ -45,6 +45,7 @@ export class AppComponent {
   }
 
   createZutaten() {
+    this.zutaten = []
     this.zutatenData.forEach(zutat => this.zutaten.push(new Zutat(zutat.id, zutat.name, zutat.typ)))
     this.zutaten.sort((a,b) => a.name.localeCompare(b.name))
   }
