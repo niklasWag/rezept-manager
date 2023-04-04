@@ -1,8 +1,8 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Aufwand, Menge, MengenEinheit, Rezept, RezeptZutat, Zutat, ZutatBodyJSON, ZutatTyp } from 'kern-util';
 import { map, Observable, of, startWith } from 'rxjs';
@@ -14,6 +14,7 @@ import { ZutatService } from '../services/zutat.service';
   styleUrls: ['./rezept-form.component.css']
 })
 export class RezeptFormComponent {
+  id: number = 0
   zutatNameFormControl = new FormControl('')
   zutatenData: ZutatBodyJSON[] = []
   zutaten: Zutat[] = []
@@ -30,13 +31,20 @@ export class RezeptFormComponent {
   mengeWert: number = 0
   mengeEinheit: string = ''
 
-  constructor(public dialogRef: MatDialogRef<RezeptFormComponent>, private readonly zutatService: ZutatService) {
+  constructor(public dialogRef: MatDialogRef<RezeptFormComponent>, private readonly zutatService: ZutatService, @Inject(MAT_DIALOG_DATA) public data?: Rezept) {
     this.zutatService.getAll().subscribe({next: res => this.zutatenData = res, complete: () => this.createZutaten()})
     for (const val in MengenEinheit) {
       this.mengenEinheiten.push(val)
     }
     for (const val in ZutatTyp) {
       this.zutatTypen.push(val)
+    }
+    if (this.data) {
+      this.id = this.data.getId()
+      this.name = this.data.name
+      this.aufwand = this.data.aufwand
+      this.rezeptZutaten = this.data.rezeptZutaten
+      this.tableData.data = this.rezeptZutaten
     }
   }
 
@@ -97,7 +105,7 @@ export class RezeptFormComponent {
       window.alert('Mengeneinheit ungültig')
       return
     }
-    const rezeptZutat = new RezeptZutat(0, new Zutat(0, this.zutatName, this.zutatTyp as ZutatTyp), new Menge(this.mengeWert, this.mengeEinheit as MengenEinheit))
+    const rezeptZutat = new RezeptZutat(this.id, new Zutat(0, this.zutatName, this.zutatTyp as ZutatTyp), new Menge(this.mengeWert, this.mengeEinheit as MengenEinheit))
     this.rezeptZutaten.push(rezeptZutat)
     this.tableData.data = this.rezeptZutaten
     this.zutatNameFormControl.setValue('')
@@ -115,7 +123,7 @@ export class RezeptFormComponent {
       window.alert('Name ist ungültig')
       return
     }
-    const rezept = new Rezept(0, this.name, this.aufwand, this.rezeptZutaten)
+    const rezept = new Rezept(this.id, this.name, this.aufwand, this.rezeptZutaten)
     this.dialogRef.close(rezept)
   }
 

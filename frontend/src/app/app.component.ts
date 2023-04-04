@@ -68,7 +68,14 @@ export class AppComponent {
   }
 
   updateRezept(id: number) {
-    console.log(id)
+    const dialogRef = this.matDialog.open(RezeptFormComponent, {data: this.rezepte.find(rezept => rezept.getId() === id), disableClose: true})
+    dialogRef.afterClosed().subscribe({next: x => {
+      const body = (x as Rezept).createRezeptBodyJSON()
+      this.rezeptService.put(body).subscribe({complete: () => {
+        this.rezeptService.getAll().subscribe({next: res => this.rezepteData = res, complete: () => this.createRezepte()})
+        this.zutatService.getAll().subscribe({next: res => this.zutatenData = res, complete: () => this.createZutaten()})
+      }})
+    }})
   }
 
   deleteRezept(id: number) {

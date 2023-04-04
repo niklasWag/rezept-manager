@@ -26,4 +26,8 @@ export class RezeptService {
   search(filter: any): Observable<RezeptBodyJSON[]> {
     return this.httpClient.post<RezeptBodyJSON[]>(`${environment.apiUrl}/rezepte/search`, filter)
   }
+
+  put(rezeptJSON: RezeptBodyJSON): Observable<any> {
+    return this.httpClient.put(`${environment.apiUrl}/rezept`, rezeptJSON)
+  }
 }
