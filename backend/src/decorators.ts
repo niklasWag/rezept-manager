@@ -17,6 +17,8 @@ export function Get (path: string): MethodDecorator {
       } catch (err: any) {
         if (err.message === 'Invalid parameter') {
           res.status(400).send('Invalid parameter')
+        } else if (err.message === 'Not found') {
+          res.status(404).send()
         } else {
           res.status(500).json({
             message: 'An error occurred',

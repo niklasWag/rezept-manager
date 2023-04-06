@@ -1,5 +1,6 @@
 import { Request } from "express"
 import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand } from "kern-util"
+import { EntityNotFoundError } from "typeorm"
 import { rezeptSuchen } from "../Application Code/rezeptSuche"
 import { arraysEqual } from "../helpers"
 import { RezeptEntity } from "./datenbankEntities/RezeptEntity/rezept.entity"
@@ -44,12 +45,20 @@ export async function getRezept(req: Request): Promise<RezeptBodyJSON> {
   const id: number = parseInt(req.params.id)
   if (Number.isNaN(id)) throw Error('Invalid parameter')
 
-  const rezeptData =  await rezeptEntityManager.getById(id)
-  const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezeptData.id)
-  const rezeptZutaten = await rezeptZutatenErstellen(rezeptZutatData)
+  try {
+    const rezeptData =  await rezeptEntityManager.getById(id)
+    const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezeptData.id)
+    const rezeptZutaten = await rezeptZutatenErstellen(rezeptZutatData)
 
-  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, rezeptZutaten)
-  return rezept.createRezeptBodyJSON()
+    const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, rezeptZutaten)
+    return rezept.createRezeptBodyJSON()
+  } catch (err: any) {
+    if (err instanceof EntityNotFoundError) {
+      throw Error('Not found')
+    } else {
+      throw err
+    }
+  }
 }
 
 export async function deleteRezept(req: Request) {
