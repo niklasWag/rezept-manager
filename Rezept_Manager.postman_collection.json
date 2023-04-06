@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "951ca6b2-8106-4c12-8fcf-2fbc846dc626",
+		"name": "Rezept Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26164208"
+	},
+	"item": [
+		{
+			"name": "Rezept",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 0,\r\n    \"name\": \"testRezept\",\r\n    \"aufwand\": \"mittel\",\r\n    \"rezeptZutaten\": [\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"zutat\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat1\",\r\n                \"typ\": \"sonstiges\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 5,\r\n                \"einheit\": \"Stück\"\r\n            }\r\n        },\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"zutat\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat2\",\r\n                \"typ\": \"fleisch\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 1,\r\n                \"einheit\": \"kg\"\r\n            }\r\n        }\r\n    ] \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rezept",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rezept"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rezept",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 9,\r\n    \"name\": \"testRezeptUpdate\",\r\n    \"aufwand\": \"einfach\",\r\n    \"rezeptZutaten\": [\r\n        {\r\n            \"rezeptId\": 9,\r\n            \"zutat\": {\r\n                \"id\": 10,\r\n                \"name\": \"testZutat1\",\r\n                \"typ\": \"sonstiges\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 5,\r\n                \"einheit\": \"Stück\"\r\n            }\r\n        },\r\n        {\r\n            \"rezeptId\": 9,\r\n            \"zutat\": {\r\n                \"id\": 11,\r\n                \"name\": \"testZutat2\",\r\n                \"typ\": \"fleisch\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 1,\r\n                \"einheit\": \"kg\"\r\n            }\r\n        }\r\n    ] \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rezept",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rezept"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Rezepte",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 0,\r\n    \"name\": \"testRezept\",\r\n    \"aufwand\": \"einfach\",\r\n    \"rezeptZutaten\": [\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"zutat\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat1\",\r\n                \"typ\": \"sonstiges\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 5,\r\n                \"einheit\": \"Stück\"\r\n            }\r\n        },\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"zutat\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat2\",\r\n                \"typ\": \"fleisch\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 1,\r\n                \"einheit\": \"kg\"\r\n            }\r\n        }\r\n    ] \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rezepte",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rezepte"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rezept by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/rezept/9",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rezept",
+						"9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Zutaten",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/zutaten",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"zutaten"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rezept",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/rezept/9",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rezept",
+						"9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rezept Search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"zutaten\": [\n\n    ],\n    \"aufwand\": [\n        \"mittel\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rezepte/search",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rezepte",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/test",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
