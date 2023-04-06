@@ -2,6 +2,7 @@ import { Request } from "express"
 import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand } from "kern-util"
 import { rezeptSuchen } from "../Application Code/rezeptSuche"
 import { arraysEqual } from "../helpers"
+import { RezeptEntity } from "./datenbankEntities/RezeptEntity/rezept.entity"
 import { RezeptEntityManager } from "./datenbankEntities/RezeptEntity/rezeptEntityManager"
 import { RezeptZutatEntityManager } from "./datenbankEntities/RezeptZutatEntity/rezeptZutatEntityManager"
 import { ZutatEntityManager } from "./datenbankEntities/ZutatEntity/zutatEntityManager"
@@ -29,26 +30,8 @@ export async function postRezept(req: Request) {
 }
 
 export async function getAllRezepte(): Promise<RezeptBodyJSON[]> {
-  const rezepte: Rezept[] = []
   const rezeptData = await rezeptEntityManager.getAll()
-
-  await Promise.all(rezeptData.map(async rezept => {
-    const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezept.id)
-    const rezeptZutaten: RezeptZutat[] = []
-
-    await Promise.all(rezeptZutatData.map(async rezeptZutat => {
-      const zutatData = await zutatEntityManager.getById(rezeptZutat.zutatId)
-      rezeptZutaten.push(
-        new RezeptZutat(
-          rezeptZutat.rezeptId,
-          new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
-          new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
-          )
-        )
-    }))
-
-    rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand as Aufwand, rezeptZutaten))
-  }))
+  const rezepte = await rezeptErstellen(rezeptData)
 
   const response: RezeptBodyJSON[] = []
   rezepte.forEach(rezept => response.push(rezept.createRezeptBodyJSON()))
@@ -130,8 +113,19 @@ export async function searchRezepte(req: Request) {
   if (req.body.aufwand && Array.isArray(req.body.aufwand)) aufwand = req.body.aufwand
   if (!req.body.zutaten && !req.body.aufwand) throw Error('body type error')
   
-  const rezepte: Rezept[] = []
   const rezeptData = await rezeptEntityManager.getAll()
+  const rezepte = await rezeptErstellen(rezeptData)
+
+  const filteredRezepte = rezeptSuchen(rezepte, {zutatenIds: zutatenIds, aufwand: aufwand})
+
+  const response: RezeptBodyJSON[] = []
+  filteredRezepte.forEach(rezept => response.push(rezept.createRezeptBodyJSON()))
+  
+  return response
+}
+
+async function rezeptErstellen(rezeptData: RezeptEntity[]): Promise<Rezept[]> {
+  const rezepte: Rezept[] = []
 
   await Promise.all(rezeptData.map(async rezept => {
     const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezept.id)
@@ -144,17 +138,13 @@ export async function searchRezepte(req: Request) {
           rezeptZutat.rezeptId,
           new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
           new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
-          )
         )
+      )
     }))
 
     rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand as Aufwand, rezeptZutaten))
   }))
 
-  const filteredRezepte = rezeptSuchen(rezepte, {zutatenIds: zutatenIds, aufwand: aufwand})
-
-  const response: RezeptBodyJSON[] = []
-  filteredRezepte.forEach(rezept => response.push(rezept.createRezeptBodyJSON()))
-  
-  return response
+  return rezepte
 }
+  
