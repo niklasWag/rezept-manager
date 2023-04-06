@@ -4,6 +4,7 @@ import { rezeptSuchen } from "../Application Code/rezeptSuche"
 import { arraysEqual } from "../helpers"
 import { RezeptEntity } from "./datenbankEntities/RezeptEntity/rezept.entity"
 import { RezeptEntityManager } from "./datenbankEntities/RezeptEntity/rezeptEntityManager"
+import { RezeptZutatEntity } from "./datenbankEntities/RezeptZutatEntity/rezeptZutat.entity"
 import { RezeptZutatEntityManager } from "./datenbankEntities/RezeptZutatEntity/rezeptZutatEntityManager"
 import { ZutatEntityManager } from "./datenbankEntities/ZutatEntity/zutatEntityManager"
 import { RezeptFactory } from "./rezeptFactory"
@@ -45,17 +46,7 @@ export async function getRezept(req: Request): Promise<RezeptBodyJSON> {
 
   const rezeptData =  await rezeptEntityManager.getById(id)
   const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezeptData.id)
-  const rezeptZutaten: RezeptZutat[] = []
-  await Promise.all(rezeptZutatData.map(async rezeptZutat => {
-    const zutatData = await zutatEntityManager.getById(rezeptZutat.zutatId)
-    rezeptZutaten.push(
-      new RezeptZutat(
-        rezeptZutat.rezeptId,
-        new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
-        new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
-        )
-      )
-  }))
+  const rezeptZutaten = await rezeptZutatenErstellen(rezeptZutatData)
 
   const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, rezeptZutaten)
   return rezept.createRezeptBodyJSON()
@@ -129,22 +120,27 @@ async function rezeptErstellen(rezeptData: RezeptEntity[]): Promise<Rezept[]> {
 
   await Promise.all(rezeptData.map(async rezept => {
     const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezept.id)
-    const rezeptZutaten: RezeptZutat[] = []
-
-    await Promise.all(rezeptZutatData.map(async rezeptZutat => {
-      const zutatData = await zutatEntityManager.getById(rezeptZutat.zutatId)
-      rezeptZutaten.push(
-        new RezeptZutat(
-          rezeptZutat.rezeptId,
-          new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
-          new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
-        )
-      )
-    }))
+    const rezeptZutaten = await rezeptZutatenErstellen(rezeptZutatData)
 
     rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand as Aufwand, rezeptZutaten))
   }))
 
   return rezepte
+}
+
+async function rezeptZutatenErstellen(rezeptZutatData: RezeptZutatEntity[]): Promise<RezeptZutat[]> {
+  const rezeptZutaten: RezeptZutat[] = []
+
+  await Promise.all(rezeptZutatData.map(async rezeptZutat => {
+    const zutatData = await zutatEntityManager.getById(rezeptZutat.zutatId)
+    rezeptZutaten.push(
+      new RezeptZutat(
+        rezeptZutat.rezeptId,
+        new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
+        new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
+      )
+    )
+  }))
+  return rezeptZutaten
 }
   
