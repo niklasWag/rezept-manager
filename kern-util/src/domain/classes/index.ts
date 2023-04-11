@@ -1,4 +1,4 @@
 export * from './Menge'
 export * from './Rezept'
-export * from './RezeptZutat'
 export * from './Zutat'
+export * from './Lebensmittel'

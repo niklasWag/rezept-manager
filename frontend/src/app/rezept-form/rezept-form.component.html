@@ -36,11 +36,11 @@
                   </ng-container>
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Name</th>
-                    <td mat-cell *matCellDef="let zutat">{{zutat.zutat.name}}</td>
+                    <td mat-cell *matCellDef="let zutat">{{zutat.lebensmittel.name}}</td>
                 </ng-container>
                 <ng-container matColumnDef="typ">
                     <th mat-header-cell *matHeaderCellDef>Typ</th>
-                    <td mat-cell *matCellDef="let zutat">{{zutat.zutat.typ}}</td>
+                    <td mat-cell *matCellDef="let zutat">{{zutat.lebensmittel.typ}}</td>
                 </ng-container>
                 <ng-container matColumnDef="menge">
                     <th mat-header-cell *matHeaderCellDef>Menge</th>
@@ -55,18 +55,18 @@
             <div class="inline">
                 <mat-form-field appearance="outline">
                     <label>Name</label>
-                    <input matInput [matAutocomplete]="auto" [(ngModel)]="zutatName" [formControl]="zutatNameFormControl">
+                    <input matInput [matAutocomplete]="auto" [(ngModel)]="lebensmittelName" [formControl]="lebensmittelNameFormControl">
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="autocompleteSelected($event)">
-                        <mat-option *ngFor="let zutat of filteredZutaten | async" [value]="zutat">
-                            <span>{{zutat.name}}</span> |
-                            <small>{{zutat.typ}}</small>
+                        <mat-option *ngFor="let lebensmittel of filteredLebensmittel | async" [value]="lebensmittel">
+                            <span>{{lebensmittel.name}}</span> |
+                            <small>{{lebensmittel.typ}}</small>
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <label>Typ</label>
-                    <mat-select [(value)]="zutatTyp">
-                        <mat-option *ngFor="let typ of zutatTypen" [value]="typ">{{typ}}</mat-option>
+                    <mat-select [(value)]="lebensmittelTyp">
+                        <mat-option *ngFor="let typ of lebensmittelTypen" [value]="typ">{{typ}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
@@ -79,7 +79,7 @@
                         <mat-option *ngFor="let val of mengenEinheiten" [value]="val">{{val}}</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <button color="primary" mat-fab (click)="saveZutat()"><mat-icon>add</mat-icon></button>
+                <button color="primary" mat-fab (click)="saveLebensmittel()"><mat-icon>add</mat-icon></button>
             </div>
         </div>
     </div>

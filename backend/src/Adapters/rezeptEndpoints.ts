@@ -1,32 +1,32 @@
 import { Request } from "express"
-import { RezeptBodyJSON, RezeptZutat, Zutat, Menge, Rezept, ZutatTyp, MengenEinheit, Aufwand } from "kern-util"
+import { RezeptBodyJSON, Zutat, Lebensmittel, Menge, Rezept, LebensmittelTyp, MengenEinheit, Aufwand } from "kern-util"
 import { EntityNotFoundError } from "typeorm"
 import { rezeptSuchen } from "../Application Code/rezeptSuche"
 import { arraysEqual } from "../helpers"
 import { RezeptEntity } from "./datenbankEntities/RezeptEntity/rezept.entity"
 import { RezeptEntityManager } from "./datenbankEntities/RezeptEntity/rezeptEntityManager"
-import { RezeptZutatEntity } from "./datenbankEntities/RezeptZutatEntity/rezeptZutat.entity"
-import { RezeptZutatEntityManager } from "./datenbankEntities/RezeptZutatEntity/rezeptZutatEntityManager"
+import { ZutatEntity } from "./datenbankEntities/ZutatEntity/zutat.entity"
 import { ZutatEntityManager } from "./datenbankEntities/ZutatEntity/zutatEntityManager"
+import { LebensmittelEntityManager } from "./datenbankEntities/LebensmittelEntity/lebensmittelEntityManager"
 import { RezeptFactory } from "./rezeptFactory"
 
 const rezeptFactory = RezeptFactory.getInstance()
 const rezeptEntityManager = RezeptEntityManager.getInstance()
+const lebensmittelEntityManager = LebensmittelEntityManager.getInstance()
 const zutatEntityManager = ZutatEntityManager.getInstance()
-const rezeptZutatEntityManager = RezeptZutatEntityManager.getInstance()
 
 export async function postRezept(req: Request) {
-  const expectedKeys: string[] = [ 'id', 'name', 'aufwand', 'rezeptZutaten' ]
+  const expectedKeys: string[] = [ 'id', 'name', 'aufwand', 'zutaten' ]
   if (!arraysEqual(Object.keys(req.body), expectedKeys)) throw new Error('body type error')
 
   const rezeptData: RezeptBodyJSON = req.body
-  const rezeptZutaten: RezeptZutat[] = []
-  rezeptData.rezeptZutaten.forEach(rezeptZutat => {
-    const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ as ZutatTyp)
-    const menge: Menge = new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)
-    rezeptZutaten.push(new RezeptZutat(rezeptZutat.rezeptId, zutat, menge))
+  const zutaten: Zutat[] = []
+  rezeptData.zutaten.forEach(zutat => {
+    const lebensmittel: Lebensmittel = new Lebensmittel(zutat.lebensmittel.id, zutat.lebensmittel.name, zutat.lebensmittel.typ as LebensmittelTyp)
+    const menge: Menge = new Menge(zutat.menge.wert, zutat.menge.einheit)
+    zutaten.push(new Zutat(zutat.rezeptId, lebensmittel, menge))
   })
-  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, rezeptZutaten)
+  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, zutaten)
 
   return await rezeptFactory.createRezept(rezept)
 }
@@ -47,10 +47,10 @@ export async function getRezept(req: Request): Promise<RezeptBodyJSON> {
 
   try {
     const rezeptData =  await rezeptEntityManager.getById(id)
-    const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezeptData.id)
-    const rezeptZutaten = await rezeptZutatenErstellen(rezeptZutatData)
+    const zutatData = await zutatEntityManager.getByRezeptId(rezeptData.id)
+    const zutaten = await zutatenErstellen(zutatData)
 
-    const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, rezeptZutaten)
+    const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand as Aufwand, zutaten)
     return rezept.createRezeptBodyJSON()
   } catch (err: any) {
     if (err instanceof EntityNotFoundError) {
@@ -73,17 +73,17 @@ export async function deleteRezept(req: Request) {
 
   try {
     await rezeptEntityManager.delete(id)
-    const rezeptZutaten = await rezeptZutatEntityManager.getByRezeptId(id)
-    const zutatenIds = rezeptZutaten.map(rezeptZutat => rezeptZutat.zutatId)
-    await rezeptZutatEntityManager.deleteByRezeptId(id)
+    const zutaten = await zutatEntityManager.getByRezeptId(id)
+    const lebensmittelIds = zutaten.map(zutat => zutat.lebensmittelId)
+    await zutatEntityManager.deleteByRezeptId(id)
 
-    const zutatenToBeDeleted: number[] = []
-    const allRezeptZutaten = await rezeptZutatEntityManager.getAll()
-    zutatenIds.forEach(id => {
-      if(!(allRezeptZutaten.find(obj => obj.zutatId === id))) zutatenToBeDeleted.push(id)
+    const lebensmittelToBeDeleted: number[] = []
+    const allZutaten = await zutatEntityManager.getAll()
+    lebensmittelIds.forEach(id => {
+      if(!(allZutaten.find(obj => obj.lebensmittelId === id))) lebensmittelToBeDeleted.push(id)
     })
-    await Promise.all(zutatenToBeDeleted.map(async zutatId => {
-      await zutatEntityManager.delete(zutatId)
+    await Promise.all(lebensmittelToBeDeleted.map(async lebensmittelId => {
+      await lebensmittelEntityManager.delete(lebensmittelId)
     }))
   } catch(err) {
     throw Error('Unable to delete rezept')
@@ -91,32 +91,32 @@ export async function deleteRezept(req: Request) {
 }
 
 export async function putRezept(req: Request) {
-  const expectedKeys: string[] = [ 'id', 'name', 'aufwand', 'rezeptZutaten' ]
+  const expectedKeys: string[] = [ 'id', 'name', 'aufwand', 'zutaten' ]
   if (!arraysEqual(Object.keys(req.body), expectedKeys)) throw new Error('body type error')
 
   const rezeptData: RezeptBodyJSON = req.body
-  const rezeptZutaten: RezeptZutat[] = []
-  rezeptData.rezeptZutaten.forEach(rezeptZutat => {
-    const zutat: Zutat = new Zutat(rezeptZutat.zutat.id, rezeptZutat.zutat.name, rezeptZutat.zutat.typ)
-    const menge: Menge = new Menge(rezeptZutat.menge.wert, rezeptZutat.menge.einheit)
-    rezeptZutaten.push(new RezeptZutat(rezeptZutat.rezeptId, zutat, menge))
+  const zutaten: Zutat[] = []
+  rezeptData.zutaten.forEach(zutat => {
+    const lebensmittel: Lebensmittel = new Lebensmittel(zutat.lebensmittel.id, zutat.lebensmittel.name, zutat.lebensmittel.typ)
+    const menge: Menge = new Menge(zutat.menge.wert, zutat.menge.einheit)
+    zutaten.push(new Zutat(zutat.rezeptId, lebensmittel, menge))
   })
-  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, rezeptZutaten)
+  const rezept = new Rezept(rezeptData.id, rezeptData.name, rezeptData.aufwand, zutaten)
 
   return await rezeptFactory.updateRezept(rezept)
 }
 
 export async function searchRezepte(req: Request) {
-  let zutatenIds: number[] = []
+  let lebensmittelIds: number[] = []
   let aufwand: string[] = []
-  if (req.body.zutaten && Array.isArray(req.body.zutaten)) zutatenIds = req.body.zutaten
+  if (req.body.lebensmittel && Array.isArray(req.body.lebensmittel)) lebensmittelIds = req.body.lebensmittel
   if (req.body.aufwand && Array.isArray(req.body.aufwand)) aufwand = req.body.aufwand
-  if (!req.body.zutaten && !req.body.aufwand) throw Error('body type error')
+  if (!req.body.lebensmittel && !req.body.aufwand) throw Error('body type error')
   
   const rezeptData = await rezeptEntityManager.getAll()
   const rezepte = await rezeptErstellen(rezeptData)
 
-  const filteredRezepte = rezeptSuchen(rezepte, {zutatenIds: zutatenIds, aufwand: aufwand})
+  const filteredRezepte = rezeptSuchen(rezepte, {lebensmittelIds: lebensmittelIds, aufwand: aufwand})
 
   const response: RezeptBodyJSON[] = []
   filteredRezepte.forEach(rezept => response.push(rezept.createRezeptBodyJSON()))
@@ -128,28 +128,28 @@ async function rezeptErstellen(rezeptData: RezeptEntity[]): Promise<Rezept[]> {
   const rezepte: Rezept[] = []
 
   await Promise.all(rezeptData.map(async rezept => {
-    const rezeptZutatData = await rezeptZutatEntityManager.getByRezeptId(rezept.id)
-    const rezeptZutaten = await rezeptZutatenErstellen(rezeptZutatData)
+    const zutatData = await zutatEntityManager.getByRezeptId(rezept.id)
+    const zutaten = await zutatenErstellen(zutatData)
 
-    rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand as Aufwand, rezeptZutaten))
+    rezepte.push(new Rezept(rezept.id, rezept.name, rezept.aufwand as Aufwand, zutaten))
   }))
 
   return rezepte
 }
 
-async function rezeptZutatenErstellen(rezeptZutatData: RezeptZutatEntity[]): Promise<RezeptZutat[]> {
-  const rezeptZutaten: RezeptZutat[] = []
+async function zutatenErstellen(zutatData: ZutatEntity[]): Promise<Zutat[]> {
+  const zutaten: Zutat[] = []
 
-  await Promise.all(rezeptZutatData.map(async rezeptZutat => {
-    const zutatData = await zutatEntityManager.getById(rezeptZutat.zutatId)
-    rezeptZutaten.push(
-      new RezeptZutat(
-        rezeptZutat.rezeptId,
-        new Zutat(zutatData.id, zutatData.name, zutatData.typ as ZutatTyp),
-        new Menge(rezeptZutat.mengeWert, rezeptZutat.mengeEinheit as MengenEinheit)
+  await Promise.all(zutatData.map(async zutat => {
+    const lebensmittelData = await lebensmittelEntityManager.getById(zutat.lebensmittelId)
+    zutaten.push(
+      new Zutat(
+        zutat.rezeptId,
+        new Lebensmittel(lebensmittelData.id, lebensmittelData.name, lebensmittelData.typ as LebensmittelTyp),
+        new Menge(zutat.mengeWert, zutat.mengeEinheit as MengenEinheit)
       )
     )
   }))
-  return rezeptZutaten
+  return zutaten
 }
   

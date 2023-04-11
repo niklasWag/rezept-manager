@@ -1,9 +1,9 @@
 import { dataSource } from "../../src/Adapters/datenbankAdapter";
-import { Zutat, ZutatTyp } from 'kern-util'
-import { ZutatEntityManager } from "../../src/Adapters/datenbankEntities/ZutatEntity/zutatEntityManager";
+import { Lebensmittel, LebensmittelTyp } from 'kern-util'
+import { LebensmittelEntityManager } from "../../src/Adapters/datenbankEntities/LebensmittelEntity/lebensmittelEntityManager";
 
-const mockZutat = new Zutat(13000, 'mockZutat', ZutatTyp.sonstiges)
-const zutatEntityManager = ZutatEntityManager.getInstance()
+const mockLebensmittel = new Lebensmittel(13000, 'mockLebensmittel', LebensmittelTyp.sonstiges)
+const lebensmittelEntityManager = LebensmittelEntityManager.getInstance()
 
 beforeAll(async () => {
   await dataSource.initialize()
@@ -13,29 +13,29 @@ afterAll(async () => {
   await dataSource.destroy()
 })
 
-describe('test zutatEntityManager', () => {
-  it('rezept_entity table should exist', async () => {
-    expect(Array.isArray(await zutatEntityManager.getAll())).toBe(true)
+describe('test lebensmittelEntityManager', () => {
+  it('lebensmittel table should exist', async () => {
+    expect(Array.isArray(await lebensmittelEntityManager.getAll())).toBe(true)
   })
 
   it('should create entities', async () => {
-    const res = await zutatEntityManager.save(mockZutat)
+    const res = await lebensmittelEntityManager.save(mockLebensmittel)
     expect(typeof res).toBe('object')
-    await zutatEntityManager.delete(res.id)
+    await lebensmittelEntityManager.delete(res.id)
   })
 
-  it('should get all Rezepte', async () => {
-    expect(Array.isArray(await zutatEntityManager.getAll())).toBe(true)
+  it('should get all Lebensmittel', async () => {
+    expect(Array.isArray(await lebensmittelEntityManager.getAll())).toBe(true)
   })
 
-  it('should get Rezept by id', async () => {
-    const res = await zutatEntityManager.save(mockZutat)
-    expect(typeof(await zutatEntityManager.getById(res.id))).toBe('object')
-    await zutatEntityManager.delete(res.id)
+  it('should get Lebensmittel by id', async () => {
+    const res = await lebensmittelEntityManager.save(mockLebensmittel)
+    expect(typeof(await lebensmittelEntityManager.getById(res.id))).toBe('object')
+    await lebensmittelEntityManager.delete(res.id)
   })
 
-  it('should delete a Rezept by id', async () => {
-    const res = await zutatEntityManager.save(mockZutat)
-    expect(await zutatEntityManager.delete(res.id)).toBeTruthy()
+  it('should delete a Lebensmittel by id', async () => {
+    const res = await lebensmittelEntityManager.save(mockLebensmittel)
+    expect(await lebensmittelEntityManager.delete(res.id)).toBeTruthy()
   })
 })

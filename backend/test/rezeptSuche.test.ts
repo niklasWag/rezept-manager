@@ -1,26 +1,26 @@
-import { Aufwand, Menge, MengenEinheit, Rezept, RezeptZutat, Zutat, ZutatTyp } from "kern-util"
+import { Aufwand, Menge, MengenEinheit, Rezept, Zutat, Lebensmittel, LebensmittelTyp } from "kern-util"
 import { RezeptFilter, rezeptSuchen } from "../src/Application Code/rezeptSuche"
 
-const mockZutat1 = new Zutat(1, 'mockZutat1', ZutatTyp.sonstiges)
-const mockZutat2 = new Zutat(2, 'mockZutat2', ZutatTyp.backwaren)
-const mockZutat3 = new Zutat(3, 'mockZutat3', ZutatTyp.fisch)
+const mockLebensmittel1 = new Lebensmittel(1, 'mockZutat1', LebensmittelTyp.sonstiges)
+const mockLebensmittel2 = new Lebensmittel(2, 'mockZutat2', LebensmittelTyp.backwaren)
+const mockLebensmittel3 = new Lebensmittel(3, 'mockZutat3', LebensmittelTyp.fisch)
 
 const mockRezept1 = new Rezept(1, 'mockRezept1', Aufwand.einfach, [
-    new RezeptZutat(1, mockZutat1, new Menge(1, MengenEinheit.Stück)),
-    new RezeptZutat(1, mockZutat2, new Menge(2, MengenEinheit.kg))
+    new Zutat(1, mockLebensmittel1, new Menge(1, MengenEinheit.Stück)),
+    new Zutat(1, mockLebensmittel2, new Menge(2, MengenEinheit.kg))
 ])
 const mockRezept2 = new Rezept(2, 'mockRezept2', Aufwand.mittel, [
-    new RezeptZutat(2, mockZutat1, new Menge(3, MengenEinheit.l)),
-    new RezeptZutat(2, mockZutat3, new Menge(300, MengenEinheit.g))
+    new Zutat(2, mockLebensmittel1, new Menge(3, MengenEinheit.l)),
+    new Zutat(2, mockLebensmittel3, new Menge(300, MengenEinheit.g))
 ])
 
 const mockRezepte = [mockRezept1, mockRezept2]
 
 describe('test rezeptSuche', () => {
-    it('Should return the correct result if zutat and aufwand are specified', () => {
+    it('Should return the correct result if lebensmittel and aufwand are specified', () => {
         const filter: RezeptFilter = {
-            zutatenIds: [
-                mockZutat1.getId()
+            lebensmittelIds: [
+                mockLebensmittel1.getId()
             ],
             aufwand: [
                 'einfach'
@@ -29,11 +29,11 @@ describe('test rezeptSuche', () => {
         expect(rezeptSuchen(mockRezepte, filter).includes(mockRezept1)).toBe(true)
     })
 
-    it('Should return the correct result if only zutat is specified', () => {
+    it('Should return the correct result if only lebensmittel is specified', () => {
         const filter: RezeptFilter = {
-            zutatenIds: [
-                mockZutat2.getId(),
-                mockZutat3.getId()
+            lebensmittelIds: [
+                mockLebensmittel2.getId(),
+                mockLebensmittel3.getId()
             ],
             aufwand: []
         }
@@ -42,7 +42,7 @@ describe('test rezeptSuche', () => {
 
     it('Should return the correct result if only aufwand is specified', () => {
         const filter: RezeptFilter = {
-            zutatenIds: [],
+            lebensmittelIds: [],
             aufwand: [
                 'mittel'
             ]
@@ -52,7 +52,7 @@ describe('test rezeptSuche', () => {
 
     it('Should return all rezepte if no filter is specified', () => {
         const filter: RezeptFilter = {
-            zutatenIds: [],
+            lebensmittelIds: [],
             aufwand: []
         }
         expect(rezeptSuchen(mockRezepte, filter)).toBe(mockRezepte)
@@ -60,7 +60,7 @@ describe('test rezeptSuche', () => {
 
     it('Should return no rezept if filter is not matching any given rezept', () => {
         const filter: RezeptFilter = {
-            zutatenIds: [],
+            lebensmittelIds: [],
             aufwand: [
                 'schwer'
             ]

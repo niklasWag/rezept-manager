@@ -1,18 +1,18 @@
-import { Rezept, Zutat } from "kern-util"
+import { Rezept, Lebensmittel, Zutat } from "kern-util"
 import { dataSource } from "./datenbankAdapter"
 import { RezeptEntity } from "./datenbankEntities/RezeptEntity/rezept.entity"
 import { RezeptEntityManager } from "./datenbankEntities/RezeptEntity/rezeptEntityManager"
-import { RezeptZutatEntity } from "./datenbankEntities/RezeptZutatEntity/rezeptZutat.entity"
-import { RezeptZutatEntityManager } from "./datenbankEntities/RezeptZutatEntity/rezeptZutatEntityManager"
 import { ZutatEntity } from "./datenbankEntities/ZutatEntity/zutat.entity"
 import { ZutatEntityManager } from "./datenbankEntities/ZutatEntity/zutatEntityManager"
+import { LebensmittelEntity } from "./datenbankEntities/LebensmittelEntity/lebensmittel.entity"
+import { LebensmittelEntityManager } from "./datenbankEntities/LebensmittelEntity/lebensmittelEntityManager"
 
 export class RezeptFactory {
   private static instance: RezeptFactory
 
   private rezeptEntityManager = RezeptEntityManager.getInstance()
+  private lebensmittelEntityManager = LebensmittelEntityManager.getInstance()
   private zutatEntityManager = ZutatEntityManager.getInstance()
-  private rezeptZutatEntityManager = RezeptZutatEntityManager.getInstance()
 
   private constructor() {}
 
@@ -28,39 +28,39 @@ export class RezeptFactory {
     await dataSource.transaction(async (transactionalEntityManager) => {
       // get repositories
       const rezeptRepository = transactionalEntityManager.getRepository(RezeptEntity)
+      const lebensmittelRepository = transactionalEntityManager.getRepository(LebensmittelEntity)
       const zutatRepository = transactionalEntityManager.getRepository(ZutatEntity)
-      const rezeptZutatRepository = transactionalEntityManager.getRepository(RezeptZutatEntity)
 
       // create Rezept
       const dbRezept = await rezeptRepository.save(rezept)
       rezept.setId(dbRezept.id)
 
       // create Zutaten and RezeptZutaten
-      const rezeptZutaten = rezept.rezeptZutaten
-      await Promise.all(rezeptZutaten.map(async rezeptZutat => {
-        const zutat = rezeptZutat.zutat
-        const dbZutat = await zutatRepository.findOneBy({name: zutat.name, typ: zutat.typ})
+      const zutaten = rezept.zutaten
+      await Promise.all(zutaten.map(async zutat => {
+        const lebensmittel = zutat.lebensmittel
+        const dbLebensmittel = await lebensmittelRepository.findOneBy({name: lebensmittel.name, typ: lebensmittel.typ})
 
         // create missing Zutat
-        if (!dbZutat) {
-          const erstellteZutat = await zutatRepository.save(zutat)
-          zutat.setId(erstellteZutat.id)
+        if (!dbLebensmittel) {
+          const erstelltesLebensmittel = await lebensmittelRepository.save(lebensmittel)
+          lebensmittel.setId(erstelltesLebensmittel.id)
         } else {
-          zutat.setId(dbZutat.id)
+          lebensmittel.setId(dbLebensmittel.id)
         }
 
         // create RezeptZutaten
-        const neueRezeptZutat: RezeptZutatEntity = {
+        const neueZutat: ZutatEntity = {
           rezeptId: rezept.getId(),
-          zutatId: zutat.getId(),
-          mengeWert: rezeptZutat.menge.wert,
-          mengeEinheit: rezeptZutat.menge.einheit,
-          mengeTyp: rezeptZutat.menge.typ
+          lebensmittelId: lebensmittel.getId(),
+          mengeWert: zutat.menge.wert,
+          mengeEinheit: zutat.menge.einheit,
+          mengeTyp: zutat.menge.typ
         }
         
-        const dbRezeptZutat = await rezeptZutatRepository.save(neueRezeptZutat)
-        rezeptZutat.zutat.setId(dbRezeptZutat.zutatId)
-        rezeptZutat.setRezeptId(dbRezeptZutat.rezeptId)
+        const dbZutat = await zutatRepository.save(neueZutat)
+        zutat.lebensmittel.setId(dbZutat.lebensmittelId)
+        zutat.setRezeptId(dbZutat.rezeptId)
       }))
     })
 
@@ -71,8 +71,8 @@ export class RezeptFactory {
     await dataSource.transaction(async (transactionalEntityManager) => {
       // get repositories
       const rezeptRepository = transactionalEntityManager.getRepository(RezeptEntity)
+      const lebensmittelRepository = transactionalEntityManager.getRepository(LebensmittelEntity)
       const zutatRepository = transactionalEntityManager.getRepository(ZutatEntity)
-      const rezeptZutatRepository = transactionalEntityManager.getRepository(RezeptZutatEntity)
 
       //update Rezept
       const dbRezept = await rezeptRepository.findOneByOrFail({id: rezept.getId()})
@@ -82,30 +82,30 @@ export class RezeptFactory {
       }
 
       //delete existing RezeptZutaten
-      rezeptZutatRepository.delete({rezeptId: rezept.getId()})
+      zutatRepository.delete({rezeptId: rezept.getId()})
       //update Zutaten and RezeptZutaten
-      const rezeptZutaten = rezept.rezeptZutaten
-      await Promise.all(rezeptZutaten.map(async rezeptZutat => {
-        const zutat = rezeptZutat.zutat
-        const dbZutat = await zutatRepository.findOneBy({name: zutat.name, typ: zutat.typ})
+      const zutaten = rezept.zutaten
+      await Promise.all(zutaten.map(async zutat => {
+        const lebensmittel = zutat.lebensmittel
+        const dbLebensmittel = await lebensmittelRepository.findOneBy({name: lebensmittel.name, typ: lebensmittel.typ})
 
         // create missing Zutat
-        if (!dbZutat) {
-          const erstellteZutat = await zutatRepository.save(zutat)
-          zutat.setId(erstellteZutat.id)
+        if (!dbLebensmittel) {
+          const erstelltesLebensmittel = await lebensmittelRepository.save(lebensmittel)
+          lebensmittel.setId(erstelltesLebensmittel.id)
         }
 
-        const neueRezeptZutat: RezeptZutatEntity = {
+        const neueZutat: ZutatEntity = {
           rezeptId: rezept.getId(),
-          zutatId: zutat.getId(),
-          mengeWert: rezeptZutat.menge.wert,
-          mengeEinheit: rezeptZutat.menge.einheit,
-          mengeTyp: rezeptZutat.menge.typ
+          lebensmittelId: lebensmittel.getId(),
+          mengeWert: zutat.menge.wert,
+          mengeEinheit: zutat.menge.einheit,
+          mengeTyp: zutat.menge.typ
         }
         
-        const dbRezeptZutat = await rezeptZutatRepository.save(neueRezeptZutat)
-        rezeptZutat.zutat.setId(dbRezeptZutat.zutatId)
-        rezeptZutat.setRezeptId(dbRezeptZutat.rezeptId)
+        const dbZutat = await zutatRepository.save(neueZutat)
+        zutat.lebensmittel.setId(dbZutat.lebensmittelId)
+        zutat.setRezeptId(dbZutat.rezeptId)
       }))
     })
 

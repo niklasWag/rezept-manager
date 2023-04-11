@@ -1,11 +1,11 @@
 import { RezeptEntityManager } from "../../src/Adapters/datenbankEntities/RezeptEntity/rezeptEntityManager";
 import { dataSource } from "../../src/Adapters/datenbankAdapter";
-import { Rezept, Aufwand, Zutat, ZutatTyp, RezeptZutat, Menge, MengenEinheit } from 'kern-util'
+import { Rezept, Aufwand, Lebensmittel, LebensmittelTyp, Zutat, Menge, MengenEinheit } from 'kern-util'
 
 const mockRezept = new Rezept(13000,
   'mockRezept',
   Aufwand.einfach,
-  [new RezeptZutat(13000, new Zutat(13000, 'testZutat', ZutatTyp.sonstiges), new Menge(5, MengenEinheit.Stück))]
+  [new Zutat(13000, new Lebensmittel(13000, 'testLebensmittel', LebensmittelTyp.sonstiges), new Menge(5, MengenEinheit.Stück))]
 )
 
 const rezeptEntityManager = RezeptEntityManager.getInstance()

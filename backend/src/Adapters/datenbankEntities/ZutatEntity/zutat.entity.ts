@@ -1,14 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import { Entity, PrimaryColumn, Column } from 'typeorm'
 
 @Entity('zutat')
 export class ZutatEntity {
 
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryColumn()
+  rezeptId: number
+
+  @PrimaryColumn()
+  lebensmittelId: number
 
   @Column()
-  name: string
+  mengeWert: number
 
   @Column()
-  typ: string
+  mengeEinheit: string
+
+  @Column()
+  mengeTyp: string
 }

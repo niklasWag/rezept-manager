@@ -4,9 +4,9 @@ import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { Aufwand, Menge, MengenEinheit, Rezept, RezeptZutat, Zutat, ZutatBodyJSON, ZutatTyp } from 'kern-util';
+import { Aufwand, Menge, MengenEinheit, Rezept, Zutat, Lebensmittel, LebensmittelBodyJSON, LebensmittelTyp } from 'kern-util';
 import { map, Observable, of, startWith } from 'rxjs';
-import { ZutatService } from '../services/zutat.service';
+import { LebensmittelService } from '../services/lebensmittel.service';
 
 @Component({
   selector: 'app-rezept-form',
@@ -15,44 +15,44 @@ import { ZutatService } from '../services/zutat.service';
 })
 export class RezeptFormComponent {
   id: number = 0
-  zutatNameFormControl = new FormControl('')
-  zutatenData: ZutatBodyJSON[] = []
-  zutaten: Zutat[] = []
-  filteredZutaten: Observable<Zutat[]> = of(this.zutaten)
-  zutatTypen: any[] = []
+  lebensmittelNameFormControl = new FormControl('')
+  lebensmittelData: LebensmittelBodyJSON[] = []
+  lebensmittel: Lebensmittel[] = []
+  filteredLebensmittel: Observable<Lebensmittel[]> = of(this.lebensmittel)
+  lebensmittelTypen: any[] = []
   mengenEinheiten: any[] = []
   name: string = ''
   aufwand: Aufwand = Aufwand.mittel
-  rezeptZutaten: RezeptZutat[] = []
-  tableData = new MatTableDataSource<RezeptZutat>()
-  selection = new SelectionModel<RezeptZutat>(true, []);
-  zutatName: string = ''
-  zutatTyp: string = ''
+  zutaten: Zutat[] = []
+  tableData = new MatTableDataSource<Zutat>()
+  selection = new SelectionModel<Zutat>(true, []);
+  lebensmittelName: string = ''
+  lebensmittelTyp: string = ''
   mengeWert: number = 0
   mengeEinheit: string = ''
 
-  constructor(public dialogRef: MatDialogRef<RezeptFormComponent>, private readonly zutatService: ZutatService, @Inject(MAT_DIALOG_DATA) public data?: Rezept) {
-    this.zutatService.getAll().subscribe({next: res => this.zutatenData = res, complete: () => this.createZutaten()})
+  constructor(public dialogRef: MatDialogRef<RezeptFormComponent>, private readonly lebensmittelService: LebensmittelService, @Inject(MAT_DIALOG_DATA) public data?: Rezept) {
+    this.lebensmittelService.getAll().subscribe({next: res => this.lebensmittelData = res, complete: () => this.createLebensmittel()})
     for (const val in MengenEinheit) {
       this.mengenEinheiten.push(val)
     }
-    for (const val in ZutatTyp) {
-      this.zutatTypen.push(val)
+    for (const val in LebensmittelTyp) {
+      this.lebensmittelTypen.push(val)
     }
     if (this.data) {
       this.id = this.data.getId()
       this.name = this.data.name
       this.aufwand = this.data.aufwand
-      this.rezeptZutaten = this.data.rezeptZutaten
-      this.tableData.data = this.rezeptZutaten
+      this.zutaten = this.data.zutaten
+      this.tableData.data = this.zutaten
     }
   }
 
-  createZutaten() {
-    this.zutatenData.forEach(zutat => this.zutaten.push(new Zutat(zutat.id, zutat.name, zutat.typ)))
-    this.filteredZutaten = this.zutatNameFormControl.valueChanges.pipe(
+  createLebensmittel() {
+    this.lebensmittelData.forEach(lebensmittel => this.lebensmittel.push(new Lebensmittel(lebensmittel.id, lebensmittel.name, lebensmittel.typ)))
+    this.filteredLebensmittel = this.lebensmittelNameFormControl.valueChanges.pipe(
       startWith(''),
-      map(zutat => (zutat ? this._filter(zutat) : this.zutaten.slice())),
+      map(lebensmittel => (lebensmittel ? this._filter(lebensmittel) : this.lebensmittel.slice())),
     )
   }
 
@@ -72,29 +72,29 @@ export class RezeptFormComponent {
   }
 
   deleteZutat() {
-    this.selection.selected.forEach(selectedZutat => {
-      const index = this.rezeptZutaten.indexOf(selectedZutat)
+    this.selection.selected.forEach(selectedLebensmittel => {
+      const index = this.zutaten.indexOf(selectedLebensmittel)
       if (index != -1) {
-        this.rezeptZutaten.splice(index, 1)
+        this.zutaten.splice(index, 1)
       }
     })
-    this.tableData.data = this.rezeptZutaten
+    this.tableData.data = this.zutaten
     this.selection.clear()
   }
 
   autocompleteSelected(event: MatAutocompleteSelectedEvent) {
-    const zutat = event.option.value
-    this.zutatName = zutat.name
-    this.zutatTyp = zutat.typ
+    const lebensmittel = event.option.value
+    this.lebensmittelName = lebensmittel.name
+    this.lebensmittelTyp = lebensmittel.typ
   }
 
-  saveZutat() {
-    if (!this.zutatName) {
-      window.alert('Zutatname nicht gültig')
+  saveLebensmittel() {
+    if (!this.lebensmittelName) {
+      window.alert('Lebensmittelname nicht gültig')
       return
     }
-    if (!this.zutatTyp) {
-      window.alert('Zutattyp nicht gültig')
+    if (!this.lebensmittelTyp) {
+      window.alert('Lebensmiteltyp nicht gültig')
       return
     }
     if (!this.mengeWert || this.mengeWert <= 0) {
@@ -105,11 +105,11 @@ export class RezeptFormComponent {
       window.alert('Mengeneinheit ungültig')
       return
     }
-    const rezeptZutat = new RezeptZutat(this.id, new Zutat(0, this.zutatName, this.zutatTyp as ZutatTyp), new Menge(this.mengeWert, this.mengeEinheit as MengenEinheit))
-    this.rezeptZutaten.push(rezeptZutat)
-    this.tableData.data = this.rezeptZutaten
-    this.zutatNameFormControl.setValue('')
-    this.zutatTyp = ''
+    const zutat = new Zutat(this.id, new Lebensmittel(0, this.lebensmittelName, this.lebensmittelTyp as LebensmittelTyp), new Menge(this.mengeWert, this.mengeEinheit as MengenEinheit))
+    this.zutaten.push(zutat)
+    this.tableData.data = this.zutaten
+    this.lebensmittelNameFormControl.setValue('')
+    this.lebensmittelTyp = ''
     this.mengeWert = 0
     this.mengeEinheit = ''
   }
@@ -123,17 +123,17 @@ export class RezeptFormComponent {
       window.alert('Name ist ungültig')
       return
     }
-    const rezept = new Rezept(this.id, this.name, this.aufwand, this.rezeptZutaten)
+    const rezept = new Rezept(this.id, this.name, this.aufwand, this.zutaten)
     this.dialogRef.close(rezept)
   }
 
-  private _filter(value: string): Zutat[] {
+  private _filter(value: string): Lebensmittel[] {
     if (typeof value === 'string') {
       const filterValue = value.toLowerCase()
 
-      return this.zutaten.filter(zutat => zutat.name.toLowerCase().includes(filterValue))
+      return this.lebensmittel.filter(lebensmittel => lebensmittel.name.toLowerCase().includes(filterValue))
     } else {
-      return this.zutaten
+      return this.lebensmittel
     }
   }
 

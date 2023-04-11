@@ -1,17 +1,17 @@
 import { Identifizierbar } from "../interfaces/Identifizierbar"
-import { RezeptZutat, RezeptZutatBodyJSON } from "./RezeptZutat"
+import { Zutat, ZutatBodyJSON } from "./Zutat"
 
 export class Rezept implements Identifizierbar {
   private _id: number
   name: string
   aufwand: Aufwand
-  rezeptZutaten: RezeptZutat[]
+  zutaten: Zutat[]
 
-  constructor (id: number, name: string, aufwand: Aufwand, rezeptZutaten: RezeptZutat[]) {
+  constructor (id: number, name: string, aufwand: Aufwand, zutaten: Zutat[]) {
     this._id = id
     this.name = name
     this.aufwand = aufwand
-    this.rezeptZutaten = rezeptZutaten
+    this.zutaten = zutaten
   }
 
   getId(): number {
@@ -23,16 +23,16 @@ export class Rezept implements Identifizierbar {
   }
 
   createRezeptBodyJSON(): RezeptBodyJSON {
-    const rezeptZutatenJSON: RezeptZutatBodyJSON[] = []
-    this.rezeptZutaten.forEach(rezeptZutat => {
-      const rezeptZutatJSON = rezeptZutat.createRezeptZutatBodyJSON()
-      rezeptZutatenJSON.push(rezeptZutatJSON)
+    const zutatenJSON: ZutatBodyJSON[] = []
+    this.zutaten.forEach(zutat => {
+      const zutatJSON = zutat.createZutatBodyJSON()
+      zutatenJSON.push(zutatJSON)
     })
     const rezeptJSON: RezeptBodyJSON = {
       id: this.getId(),
       name: this.name,
       aufwand: this.aufwand,
-      rezeptZutaten: rezeptZutatenJSON
+      zutaten: zutatenJSON
     }
     return rezeptJSON
   }
@@ -42,7 +42,7 @@ export type RezeptBodyJSON = {
   id: number,
   name: string,
   aufwand: Aufwand,
-  rezeptZutaten: RezeptZutatBodyJSON[]
+  zutaten: ZutatBodyJSON[]
 }
 
 export enum Aufwand {

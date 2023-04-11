@@ -6,8 +6,8 @@
   </div>
   <hr>
   <div class="zutaten">
-    <ng-container *ngFor="let zutat of rezept.rezeptZutaten">
-      <span>{{zutat.zutat.name}}: {{zutat.menge.wert}} {{zutat.menge.einheit}}</span>
+    <ng-container *ngFor="let zutat of rezept.zutaten">
+      <span>{{zutat.lebensmittel.name}}: {{zutat.menge.wert}} {{zutat.menge.einheit}}</span>
     </ng-container>
   </div>
   <hr>

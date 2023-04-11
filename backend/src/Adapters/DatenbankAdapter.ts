@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { RezeptEntity } from './datenbankEntities/RezeptEntity/rezept.entity';
+import { LebensmittelEntity } from './datenbankEntities/LebensmittelEntity/lebensmittel.entity';
 import { ZutatEntity } from './datenbankEntities/ZutatEntity/zutat.entity';
-import { RezeptZutatEntity } from './datenbankEntities/RezeptZutatEntity/rezeptZutat.entity';
 
 export const dataSource = new DataSource({
   type: 'postgres',
@@ -9,7 +9,7 @@ export const dataSource = new DataSource({
   port: 5432,
   username: 'postgres',
   password: '3Q4s!Uq8KG',
-  entities: [RezeptEntity, ZutatEntity, RezeptZutatEntity],
+  entities: [RezeptEntity, LebensmittelEntity, ZutatEntity],
   synchronize: true
 })
 

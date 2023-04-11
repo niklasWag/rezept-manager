@@ -3,8 +3,8 @@
 </mat-toolbar>
 <div id="filterBar">
   <mat-form-field appearance="outline">
-    <mat-select multiple [(value)]="zutatenQuery">
-      <mat-option *ngFor="let zutat of zutaten" [value]="zutat.getId()">{{zutat.name}} - {{zutat.typ}}</mat-option>
+    <mat-select multiple [(value)]="lebensmittelQuery">
+      <mat-option *ngFor="let lebensmittel of lebensmittel" [value]="lebensmittel.getId()">{{lebensmittel.name}} - {{lebensmittel.typ}}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline">

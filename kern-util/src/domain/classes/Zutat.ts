@@ -1,48 +1,41 @@
-import { Identifizierbar } from "../interfaces"
+import { Menge, MengeBodyJSON } from "./Menge";
+import { Lebensmittel, LebensmittelBodyJSON } from "./Lebensmittel";
 
-export class Zutat implements Identifizierbar {
-  private _id: number
-  name: string
-  typ: ZutatTyp
+export class Zutat {
+  private _rezeptId: number
+  lebensmittel: Lebensmittel
+  menge: Menge
 
-  constructor(id: number, name: string, typ: ZutatTyp) {
-    this._id = id
-    this.name = name
-    this.typ = typ
+  constructor(rezeptId: number, lebensmittel: Lebensmittel, menge: Menge) {
+    this._rezeptId = rezeptId
+    this.lebensmittel = lebensmittel
+    this.menge = menge
   }
 
-  getId(): number {
-    return this._id
+  getRezeptId(): number {
+    return this._rezeptId
   }
 
-  setId(id: number): void {
-    this._id = id
+  setRezeptId(rezeptId: number): void {
+    this._rezeptId = rezeptId
+  }
+
+  getLebensmittelId(): number {
+    return this.lebensmittel.getId()
   }
 
   createZutatBodyJSON(): ZutatBodyJSON {
-    const zutatJSON = {
-      id: this.getId(),
-      name: this.name,
-      typ: this.typ
+    const zutatJSON: ZutatBodyJSON = {
+      rezeptId: this.getRezeptId(),
+      lebensmittel: this.lebensmittel.createLebensmittelBodyJSON(),
+      menge: this.menge.createMengeBodyJSON()
     }
     return zutatJSON
   }
 }
 
-export enum ZutatTyp {
-  backwaren = 'Backwaren',
-  obst = 'Obst',
-  gemuese = 'Gemüse',
-  fleisch = 'Fleisch',
-  fisch = 'Fisch',
-  milchprodukte = 'Milchprodukte',
-  teigwaren = 'Teigwaren',
-  sonstiges = 'Sonstiges',
-  getraenke = 'Getränke'
-}
-
 export type ZutatBodyJSON = {
-  id: number,
-  name: string,
-  typ: ZutatTyp
+  rezeptId: number,
+  lebensmittel: LebensmittelBodyJSON,
+  menge: MengeBodyJSON
 }

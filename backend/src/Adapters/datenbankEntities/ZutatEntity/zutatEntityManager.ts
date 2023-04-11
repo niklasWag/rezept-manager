@@ -1,7 +1,6 @@
-import { Zutat } from "kern-util";
-import { dataSource } from "../../datenbankAdapter";
-import { ZutatEntity } from "./zutat.entity";
-import { DeleteResult } from "typeorm";
+import { dataSource } from "../../datenbankAdapter"
+import { ZutatEntity } from "./zutat.entity"
+import { DeleteResult } from 'typeorm'
 
 export class ZutatEntityManager {
   private static instance: ZutatEntityManager
@@ -22,16 +21,23 @@ export class ZutatEntityManager {
     return await this.zutatRepository.find()
   }
 
-  async getById(id: number): Promise<ZutatEntity> {
-    return await this.zutatRepository.findOneByOrFail({id})
+  async getById(rezeptId: number, lebensmittelId: number): Promise<ZutatEntity> {
+    return await this.zutatRepository.findOneByOrFail({rezeptId, lebensmittelId})
   }
 
-  async save(zutat: Zutat): Promise<ZutatEntity> {
-    const zutatEntity: ZutatEntity = {id: zutat.getId(), name: zutat.name, typ: zutat.typ}
+  async getByRezeptId(rezeptId: number): Promise<ZutatEntity[]> {
+    return await this.zutatRepository.findBy({rezeptId})
+  }
+
+  async save(zutatEntity: ZutatEntity): Promise<ZutatEntity> {
     return await this.zutatRepository.save(zutatEntity)
   }
 
-  async delete(id: number): Promise<DeleteResult> {
-    return await this.zutatRepository.delete(id)
+  async delete(rezeptId: number, lebensmittelId: number): Promise<DeleteResult> {
+    return await this.zutatRepository.delete({rezeptId, lebensmittelId})
+  }
+
+  async deleteByRezeptId(rezeptId: number): Promise<DeleteResult> {
+    return await this.zutatRepository.delete({rezeptId})
   }
 }
