@@ -9,10 +9,11 @@ import { ZutatEntity } from "./datenbankEntities/ZutatEntity/zutat.entity"
 import { ZutatEntityManager } from "./datenbankEntities/ZutatEntity/zutatEntityManager"
 import { LebensmittelEntityManager } from "./datenbankEntities/LebensmittelEntity/lebensmittelEntityManager"
 import { RezeptFactory } from "./rezeptFactory"
+import { DatenbankLebensmittelRepository } from "./datenbankEntities/DatenbankLebensmittelRepository"
 
 const rezeptFactory = RezeptFactory.getInstance()
 const rezeptEntityManager = RezeptEntityManager.getInstance()
-const lebensmittelEntityManager = LebensmittelEntityManager.getInstance()
+const lebensmittelEntityManager = LebensmittelEntityManager.getInstance(DatenbankLebensmittelRepository.getInstance())
 const zutatEntityManager = ZutatEntityManager.getInstance()
 
 export async function postRezept(req: Request) {
@@ -145,7 +146,7 @@ async function zutatenErstellen(zutatData: ZutatEntity[]): Promise<Zutat[]> {
     zutaten.push(
       new Zutat(
         zutat.rezeptId,
-        new Lebensmittel(lebensmittelData.id, lebensmittelData.name, lebensmittelData.typ as LebensmittelTyp),
+        new Lebensmittel(lebensmittelData.getId(), lebensmittelData.name, lebensmittelData.typ as LebensmittelTyp),
         new Menge(zutat.mengeWert, zutat.mengeEinheit as MengenEinheit)
       )
     )

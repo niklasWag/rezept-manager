@@ -6,12 +6,13 @@ import { ZutatEntity } from "./datenbankEntities/ZutatEntity/zutat.entity"
 import { ZutatEntityManager } from "./datenbankEntities/ZutatEntity/zutatEntityManager"
 import { LebensmittelEntity } from "./datenbankEntities/LebensmittelEntity/lebensmittel.entity"
 import { LebensmittelEntityManager } from "./datenbankEntities/LebensmittelEntity/lebensmittelEntityManager"
+import { DatenbankLebensmittelRepository } from "./datenbankEntities/DatenbankLebensmittelRepository"
 
 export class RezeptFactory {
   private static instance: RezeptFactory
 
   private rezeptEntityManager = RezeptEntityManager.getInstance()
-  private lebensmittelEntityManager = LebensmittelEntityManager.getInstance()
+  private lebensmittelEntityManager = LebensmittelEntityManager.getInstance(DatenbankLebensmittelRepository.getInstance())
   private zutatEntityManager = ZutatEntityManager.getInstance()
 
   private constructor() {}

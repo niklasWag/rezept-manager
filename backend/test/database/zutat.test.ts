@@ -1,9 +1,10 @@
 import { dataSource } from "../../src/Adapters/datenbankAdapter";
 import { Lebensmittel, LebensmittelTyp } from 'kern-util'
 import { LebensmittelEntityManager } from "../../src/Adapters/datenbankEntities/LebensmittelEntity/lebensmittelEntityManager";
+import { DatenbankLebensmittelRepository } from "../../src/Adapters/datenbankEntities/DatenbankLebensmittelRepository";
 
 const mockLebensmittel = new Lebensmittel(13000, 'mockLebensmittel', LebensmittelTyp.sonstiges)
-const lebensmittelEntityManager = LebensmittelEntityManager.getInstance()
+const lebensmittelEntityManager = LebensmittelEntityManager.getInstance(DatenbankLebensmittelRepository.getInstance())
 
 beforeAll(async () => {
   await dataSource.initialize()
