@@ -21,12 +21,12 @@ export class DatenbankZutatRepository implements ZutatRepository {
         return DatenbankZutatRepository.instance
     }
     
-    async find(): Promise<ZutatRecord[]> {
+    async findAll(): Promise<ZutatRecord[]> {
         const zutatResults = await this.zutatRepository.find()
         return zutatResults.map((zutatEntity) => this.zutatEntityzuZutatRecord(zutatEntity));
     }
-    async findOneByOrFail(searchParam: object): Promise<ZutatRecord> {
-        const zutatResult = await this.zutatRepository.findOneByOrFail(searchParam)
+    async findOneByOrFail(rezeptId: number, lebensmittelId: number): Promise<ZutatRecord> {
+        const zutatResult = await this.zutatRepository.findOneByOrFail({rezeptId, lebensmittelId})
         return this.zutatEntityzuZutatRecord(zutatResult)
     }
     async findOneBy(searchParam: object): Promise<ZutatRecord | null> {
@@ -39,16 +39,16 @@ export class DatenbankZutatRepository implements ZutatRepository {
         const zutatResult = await this.zutatRepository.save(zutatEntity)
         return this.zutatEntityzuZutatRecord(zutatResult)
     }
-    async delete(searchParam: object): Promise<void> {
-        await this.zutatRepository.delete(searchParam)
+    async delete(rezeptId: number, lebensmittelId: number): Promise<any> {
+        return await this.zutatRepository.delete({rezeptId, lebensmittelId})
     }
     
-    async getByRezeptId(searchParam: object): Promise<ZutatRecord[]> {
-        const zutatResults = await this.zutatRepository.findBy(searchParam)
+    async getByRezeptId(rezeptId: number): Promise<ZutatRecord[]> {
+        const zutatResults = await this.zutatRepository.findBy({rezeptId})
         return zutatResults.map((zutatEntity) => this.zutatEntityzuZutatRecord(zutatEntity));
     }
-    async deleteByRezeptId(searchParam: object): Promise<void> {
-        await this.zutatRepository.delete(searchParam)
+    async deleteByRezeptId(rezeptId: number): Promise<any> {
+        return await this.zutatRepository.delete({rezeptId})
     }
 
     private zutatEntityzuZutatRecord(zutatEntity: ZutatEntity): ZutatRecord {

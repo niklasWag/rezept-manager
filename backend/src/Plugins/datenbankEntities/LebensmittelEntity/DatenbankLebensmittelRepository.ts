@@ -20,12 +20,12 @@ export class DatenbankLebensmittelRepository implements Repository<LebensmittelR
         return DatenbankLebensmittelRepository.instance
     }
 
-    async find(): Promise<LebensmittelRecord[]> {
+    async findAll(): Promise<LebensmittelRecord[]> {
         const lebensmittelResults = await this.lebensmittelRepository.find()
         return lebensmittelResults.map((lebensmittelEntity) => this.lebensmittelEntityZuLebensmittenRecord(lebensmittelEntity));
     }
-    async findOneByOrFail(searchParam: object): Promise<LebensmittelRecord> {
-        const lebensmittelResult = await this.lebensmittelRepository.findOneByOrFail(searchParam)
+    async findOneByOrFail(id: number): Promise<LebensmittelRecord> {
+        const lebensmittelResult = await this.lebensmittelRepository.findOneByOrFail({id})
         return this.lebensmittelEntityZuLebensmittenRecord(lebensmittelResult)
     }
     async findOneBy(searchParam: object): Promise<LebensmittelRecord | null> {
@@ -39,8 +39,8 @@ export class DatenbankLebensmittelRepository implements Repository<LebensmittelR
         const lebensmittelResult = await this.lebensmittelRepository.save(lebensmittelEntity)
         return this.lebensmittelEntityZuLebensmittenRecord(lebensmittelResult)
     }
-    async delete(searchParam: object): Promise<void> {
-        await this.lebensmittelRepository.delete(searchParam)
+    async delete(id: number): Promise<any> {
+        return await this.lebensmittelRepository.delete({id})
     }
 
     private lebensmittelEntityZuLebensmittenRecord(lebensmittelEntity: LebensmittelEntity): LebensmittelRecord {

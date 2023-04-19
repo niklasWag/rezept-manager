@@ -1,6 +1,8 @@
-import { RezeptEntityManager } from "../../src/Adapters/datenbankEntities/RezeptEntity/rezeptEntityManager";
+import { DatenbankRezeptRepository } from "../../src/Plugins/datenbankEntities/RezeptEntity/DatenbankRezeptRepository";
 import { dataSource } from "../../src/Plugins/DatenbankAdapter";
 import { Rezept, Aufwand, Lebensmittel, LebensmittelTyp, Zutat, Menge, MengenEinheit } from 'kern-util'
+import { RezeptEntity } from "../../src/Plugins/datenbankEntities/RezeptEntity/rezept.entity";
+import { RezeptRecord } from "../../src/Adapters/Records/RezeptRecord";
 
 const mockRezept = new Rezept(13000,
   'mockRezept',
@@ -8,7 +10,7 @@ const mockRezept = new Rezept(13000,
   [new Zutat(13000, new Lebensmittel(13000, 'testLebensmittel', LebensmittelTyp.sonstiges), new Menge(5, MengenEinheit.Stück))]
 )
 
-const rezeptEntityManager = RezeptEntityManager.getInstance()
+const datenbankRezeptRepository = DatenbankRezeptRepository.getInstance(dataSource.getRepository(RezeptEntity))
 
 beforeAll(async () => {
   await dataSource.initialize()
@@ -18,29 +20,32 @@ afterAll(async () => {
   await dataSource.destroy()
 })
 
-describe('test RezeptEntityManager', () => {
+describe('test DatenbankRezeptRepository', () => {
   it('rezept_entity table should exist', async () => {
-    expect(Array.isArray(await rezeptEntityManager.getAll())).toBe(true)
+    expect(Array.isArray(await datenbankRezeptRepository.findAll())).toBe(true)
   })
 
   it('should create entities', async () => {
-    const res = await rezeptEntityManager.save(mockRezept)
+    const record: RezeptRecord = {id: mockRezept.getId(), name: mockRezept.name, aufwand: mockRezept.aufwand}
+    const res = await datenbankRezeptRepository.save(record)
     expect(typeof res).toBe('object')
-    await rezeptEntityManager.delete(res.id)
+    await datenbankRezeptRepository.delete(res.id)
   })
 
   it('should get all Rezepte', async () => {
-    expect(Array.isArray(await rezeptEntityManager.getAll())).toBe(true)
+    expect(Array.isArray(await datenbankRezeptRepository.findAll())).toBe(true)
   })
 
   it('should get Rezept by id', async () => {
-    const res = await rezeptEntityManager.save(mockRezept)
-    expect(typeof(await rezeptEntityManager.getById(res.id))).toBe('object')
-    await rezeptEntityManager.delete(res.id)
+    const record: RezeptRecord = {id: mockRezept.getId(), name: mockRezept.name, aufwand: mockRezept.aufwand}
+    const res = await datenbankRezeptRepository.save(record)
+    expect(typeof(await datenbankRezeptRepository.findOneByOrFail(res.id))).toBe('object')
+    await datenbankRezeptRepository.delete(res.id)
   })
 
   it('should delete a Rezept by id', async () => {
-    const res = await rezeptEntityManager.save(mockRezept)
-    expect(await rezeptEntityManager.delete(res.id)).toBeTruthy()
+    const record: RezeptRecord = {id: mockRezept.getId(), name: mockRezept.name, aufwand: mockRezept.aufwand}
+    const res = await datenbankRezeptRepository.save(record)
+    expect(await datenbankRezeptRepository.delete(res.id)).toBeTruthy()
   })
 })

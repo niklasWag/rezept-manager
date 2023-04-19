@@ -1,11 +1,11 @@
 import { ZutatRecord } from "../Records/ZutatRecord";
 
 export interface ZutatRepository {
-    find(): Promise<ZutatRecord[]>;
-    findOneByOrFail(searchParam: object): Promise<ZutatRecord>;
+    findAll(): Promise<ZutatRecord[]>;
+    findOneByOrFail(rezeptId: number, lebensmittelId: number): Promise<ZutatRecord>;
     findOneBy(searchParam: object): Promise<ZutatRecord | null>;
     save(input: ZutatRecord): Promise<ZutatRecord>;
-    delete(searchParam: object): Promise<void>;
-    getByRezeptId(searchParam: object): Promise<ZutatRecord[]>
-    deleteByRezeptId(searchParam: object): Promise<void>
+    delete(rezeptId: number, lebensmittelId: number): Promise<any>;
+    getByRezeptId(rezeptId: number): Promise<ZutatRecord[]>
+    deleteByRezeptId(rezeptId: number): Promise<any>
 }

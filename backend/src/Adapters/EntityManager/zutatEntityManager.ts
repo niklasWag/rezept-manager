@@ -18,15 +18,15 @@ export class ZutatEntityManager {
     }
 
     async getAll(): Promise<ZutatRecord[]> {
-        return await this.zutatRepository.find()
+        return await this.zutatRepository.findAll()
     }
 
     async getById(rezeptId: number, lebensmittelId: number): Promise<ZutatRecord> {
-        return await this.zutatRepository.findOneByOrFail({rezeptId, lebensmittelId})
+        return await this.zutatRepository.findOneByOrFail(rezeptId, lebensmittelId)
     }
 
     async getByRezeptId(rezeptId: number): Promise<ZutatRecord[]> {
-        return await this.zutatRepository.getByRezeptId({rezeptId})
+        return await this.zutatRepository.getByRezeptId(rezeptId)
     }
 
     async save(zutat: ZutatRecord): Promise<ZutatRecord> {
@@ -34,10 +34,10 @@ export class ZutatEntityManager {
     }
 
     async delete(rezeptId: number, lebensmittelId: number): Promise<void> {
-        await this.zutatRepository.delete({rezeptId, lebensmittelId})
+        await this.zutatRepository.delete(rezeptId, lebensmittelId)
     }
 
     async deleteByRezeptId(rezeptId: number): Promise<void> {
-        return await this.zutatRepository.deleteByRezeptId({rezeptId})
+        return await this.zutatRepository.deleteByRezeptId(rezeptId)
     }
 }

@@ -19,11 +19,11 @@ export class LebensmittelEntityManager {
   }
 
   async getAll(): Promise<LebensmittelRecord[]> {
-    return await this.lebensmittelRepository.find()
+    return await this.lebensmittelRepository.findAll()
   }
 
   async getById(id: number): Promise<LebensmittelRecord> {
-    return await this.lebensmittelRepository.findOneByOrFail({id})
+    return await this.lebensmittelRepository.findOneByOrFail(id)
   }
 
   async save(lebensmittel: LebensmittelRecord): Promise<LebensmittelRecord> {
@@ -31,6 +31,6 @@ export class LebensmittelEntityManager {
   }
 
   async delete(id: number): Promise<void> {
-    await this.lebensmittelRepository.delete({id})
+    await this.lebensmittelRepository.delete(id)
   }
 }

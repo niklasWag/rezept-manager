@@ -67,14 +67,14 @@ export class RezeptFactory {
 
   async updateRezept(rezept: Rezept, rezeptRepository: Repository<RezeptRecord>, lebensmittelRepository: Repository<LebensmittelRecord>, zutatRepository: ZutatRepository): Promise<Rezept> {
     //update Rezept
-    const dbRezept = await rezeptRepository.findOneByOrFail({id: rezept.getId()})
+    const dbRezept = await rezeptRepository.findOneByOrFail(rezept.getId())
     if (dbRezept && dbRezept.id === rezept.getId()) {
       const updatedRezept: RezeptRecord = {id: rezept.getId(), name: rezept.name, aufwand: rezept.aufwand}
       rezeptRepository.save(updatedRezept)
     }
 
     //delete existing RezeptZutaten
-    zutatRepository.delete({rezeptId: rezept.getId()})
+    zutatRepository.deleteByRezeptId(rezept.getId())
     //update Zutaten and RezeptZutaten
     const zutaten = rezept.zutaten
     await Promise.all(zutaten.map(async zutat => {
@@ -89,6 +89,7 @@ export class RezeptFactory {
           typ: lebensmittel.typ
         }
         const erstelltesLebensmittel = await lebensmittelRepository.save(lebensmittelRecord)
+        console.log(erstelltesLebensmittel)
         lebensmittel.setId(erstelltesLebensmittel.id)
       }
 

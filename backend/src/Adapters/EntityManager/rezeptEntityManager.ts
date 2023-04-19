@@ -18,11 +18,11 @@ export class RezeptEntityManager {
     }
 
     async getAll(): Promise<RezeptRecord[]> {
-        return await this.rezeptRepository.find()
+        return await this.rezeptRepository.findAll()
     }
 
     async getById(id: number): Promise<RezeptRecord> {
-        return await this.rezeptRepository.findOneByOrFail({id})
+        return await this.rezeptRepository.findOneByOrFail(id)
     }
 
     async save(rezept: RezeptRecord): Promise<RezeptRecord> {
@@ -30,6 +30,6 @@ export class RezeptEntityManager {
     }
 
     async delete(id: number): Promise<void> {
-        await this.rezeptRepository.delete({id})
+        await this.rezeptRepository.delete(id)
     }
 }

@@ -1,7 +1,6 @@
 import { Repository } from "../../../Adapters/Repositorys/Repository";
 import { RezeptRecord } from "../../../Adapters/Records/RezeptRecord";
 import { RezeptEntity } from "./rezept.entity";
-import { dataSource } from "../../DatenbankAdapter";
 import { Repository as TypeORMRepository } from "typeorm";
 
 export class DatenbankRezeptRepository implements Repository<RezeptRecord> {
@@ -21,12 +20,12 @@ export class DatenbankRezeptRepository implements Repository<RezeptRecord> {
         return DatenbankRezeptRepository.instance
     }
 
-    async find(): Promise<RezeptRecord[]> {
+    async findAll(): Promise<RezeptRecord[]> {
         const rezeptResults = await this.rezeptRepository.find()
         return rezeptResults.map((rezeptEntity) => this.rezeptEntityzuRezeptRecord(rezeptEntity));
     }
-    async findOneByOrFail(searchParam: object): Promise<RezeptRecord> {
-        const rezeptResult = await this.rezeptRepository.findOneByOrFail(searchParam)
+    async findOneByOrFail(id: number): Promise<RezeptRecord> {
+        const rezeptResult = await this.rezeptRepository.findOneByOrFail({id})
         return this.rezeptEntityzuRezeptRecord(rezeptResult)
     }
     async findOneBy(searchParam: object): Promise<RezeptRecord | null> {
@@ -39,8 +38,8 @@ export class DatenbankRezeptRepository implements Repository<RezeptRecord> {
         const rezeptResult = await this.rezeptRepository.save(rezeptEntity)
         return this.rezeptEntityzuRezeptRecord(rezeptResult)
     }
-    async delete(searchParam: object): Promise<void> {
-        await this.rezeptRepository.delete(searchParam)
+    async delete(id: number): Promise<any> {
+        return await this.rezeptRepository.delete(id)
     }
 
     private rezeptEntityzuRezeptRecord(rezeptEntity: RezeptEntity): RezeptRecord {
