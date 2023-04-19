@@ -1,7 +1,7 @@
-import { dataSource } from "../../src/Adapters/datenbankAdapter";
+import { dataSource } from "../../src/Plugins/DatenbankAdapter";
 import { Lebensmittel, LebensmittelTyp } from 'kern-util'
-import { LebensmittelEntityManager } from "../../src/Adapters/datenbankEntities/LebensmittelEntity/lebensmittelEntityManager";
-import { DatenbankLebensmittelRepository } from "../../src/Adapters/datenbankEntities/DatenbankLebensmittelRepository";
+import { LebensmittelEntityManager } from "../../src/Adapters/EntityManager/lebensmittelEntityManager";
+import { DatenbankLebensmittelRepository } from "../../src/Plugins/datenbankEntities/LebensmittelEntity/DatenbankLebensmittelRepository";
 
 const mockLebensmittel = new Lebensmittel(13000, 'mockLebensmittel', LebensmittelTyp.sonstiges)
 const lebensmittelEntityManager = LebensmittelEntityManager.getInstance(DatenbankLebensmittelRepository.getInstance())

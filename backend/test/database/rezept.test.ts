@@ -1,5 +1,5 @@
 import { RezeptEntityManager } from "../../src/Adapters/datenbankEntities/RezeptEntity/rezeptEntityManager";
-import { dataSource } from "../../src/Adapters/datenbankAdapter";
+import { dataSource } from "../../src/Plugins/DatenbankAdapter";
 import { Rezept, Aufwand, Lebensmittel, LebensmittelTyp, Zutat, Menge, MengenEinheit } from 'kern-util'
 
 const mockRezept = new Rezept(13000,
