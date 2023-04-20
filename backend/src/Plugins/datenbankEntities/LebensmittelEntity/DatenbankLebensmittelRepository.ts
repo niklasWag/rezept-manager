@@ -29,7 +29,6 @@ export class DatenbankLebensmittelRepository implements Repository<LebensmittelR
         return this.lebensmittelEntityZuLebensmittenRecord(lebensmittelResult)
     }
     async findOneBy(searchParam: object): Promise<LebensmittelRecord | null> {
-        console.log(searchParam)
         const lebensmittelResult = await this.lebensmittelRepository.findOne({where: searchParam})
         if (!lebensmittelResult) return lebensmittelResult
         return this.lebensmittelEntityZuLebensmittenRecord(lebensmittelResult)
