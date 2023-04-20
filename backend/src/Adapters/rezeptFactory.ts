@@ -89,8 +89,9 @@ export class RezeptFactory {
           typ: lebensmittel.typ
         }
         const erstelltesLebensmittel = await lebensmittelRepository.save(lebensmittelRecord)
-        console.log(erstelltesLebensmittel)
         lebensmittel.setId(erstelltesLebensmittel.id)
+      } else {
+        lebensmittel.setId(dbLebensmittel.id)
       }
 
       const neueZutat: ZutatRecord = {
