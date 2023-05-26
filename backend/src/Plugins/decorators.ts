@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getServer } from '../main'
+import { getServer } from '../../main'
 
 
 export function Get (path: string): MethodDecorator {

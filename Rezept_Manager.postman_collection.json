@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 0,\r\n    \"name\": \"testRezept\",\r\n    \"aufwand\": \"mittel\",\r\n    \"rezeptZutaten\": [\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"zutat\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat1\",\r\n                \"typ\": \"sonstiges\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 5,\r\n                \"einheit\": \"Stück\"\r\n            }\r\n        },\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"zutat\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat2\",\r\n                \"typ\": \"fleisch\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 1,\r\n                \"einheit\": \"kg\"\r\n            }\r\n        }\r\n    ] \r\n}",
+					"raw": "{\r\n    \"id\": 0,\r\n    \"name\": \"testRezept\",\r\n    \"aufwand\": \"mittel\",\r\n    \"zutaten\": [\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"lebensmittel\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat1\",\r\n                \"typ\": \"sonstiges\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 5,\r\n                \"einheit\": \"Stück\"\r\n            }\r\n        },\r\n        {\r\n            \"rezeptId\": 0,\r\n            \"lebensmittel\": {\r\n                \"id\": 0,\r\n                \"name\": \"testZutat2\",\r\n                \"typ\": \"fleisch\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 1,\r\n                \"einheit\": \"kg\"\r\n            }\r\n        }\r\n    ] \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -39,7 +39,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 9,\r\n    \"name\": \"testRezeptUpdate\",\r\n    \"aufwand\": \"einfach\",\r\n    \"rezeptZutaten\": [\r\n        {\r\n            \"rezeptId\": 9,\r\n            \"zutat\": {\r\n                \"id\": 10,\r\n                \"name\": \"testZutat1\",\r\n                \"typ\": \"sonstiges\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 5,\r\n                \"einheit\": \"Stück\"\r\n            }\r\n        },\r\n        {\r\n            \"rezeptId\": 9,\r\n            \"zutat\": {\r\n                \"id\": 11,\r\n                \"name\": \"testZutat2\",\r\n                \"typ\": \"fleisch\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 1,\r\n                \"einheit\": \"kg\"\r\n            }\r\n        }\r\n    ] \r\n}",
+					"raw": "{\r\n    \"id\": 9,\r\n    \"name\": \"testRezeptUpdate\",\r\n    \"aufwand\": \"einfach\",\r\n    \"zutaten\": [\r\n        {\r\n            \"rezeptId\": 9,\r\n            \"lebensmittel\": {\r\n                \"id\": 10,\r\n                \"name\": \"testZutat1\",\r\n                \"typ\": \"sonstiges\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 5,\r\n                \"einheit\": \"Stück\"\r\n            }\r\n        },\r\n        {\r\n            \"rezeptId\": 9,\r\n            \"lebensmittel\": {\r\n                \"id\": 11,\r\n                \"name\": \"testZutat2\",\r\n                \"typ\": \"fleisch\"\r\n            },\r\n            \"menge\": {\r\n                \"wert\": 1,\r\n                \"einheit\": \"kg\"\r\n            }\r\n        }\r\n    ] \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -106,17 +106,17 @@
 			"response": []
 		},
 		{
-			"name": "Zutaten",
+			"name": "Lebensmittel",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/zutaten",
+					"raw": "{{baseUrl}}/lebensmittel",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"zutaten"
+						"lebensmittel"
 					]
 				}
 			},
