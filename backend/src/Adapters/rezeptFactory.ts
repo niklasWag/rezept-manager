@@ -74,7 +74,7 @@ export class RezeptFactory {
     }
 
     //delete existing RezeptZutaten
-    zutatRepository.deleteByRezeptId(rezept.getId())
+    await zutatRepository.deleteByRezeptId(rezept.getId())
     //update Zutaten and RezeptZutaten
     const zutaten = rezept.zutaten
     await Promise.all(zutaten.map(async zutat => {
