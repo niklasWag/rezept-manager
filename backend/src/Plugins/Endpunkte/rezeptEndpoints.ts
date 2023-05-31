@@ -83,6 +83,6 @@ export class RezeptEndpoints {
         if (req.body.aufwand && Array.isArray(req.body.aufwand)) aufwand = req.body.aufwand
         if (!req.body.lebensmittel && !req.body.aufwand) throw Error('body type error')
 
-        this.rezeptCRUD.searchRezepte(lebensmittelIds, aufwand)
+        return this.rezeptCRUD.searchRezepte(lebensmittelIds, aufwand)
     }
 }
