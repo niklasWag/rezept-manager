@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.ts",
   "scripts": {
+    "coverage": "jest --coverage",
     "start": "cross-env NODE_ENV=dev nodemon main.ts",
     "test": "jest"
   },

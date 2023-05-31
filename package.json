@@ -6,8 +6,9 @@
     "setup": "npm i && node scripts/setup.js",
     "start": "npm run setup && npm run docker && npm-run-all -p -l start-backend start-frontend",
     "start-backend": "cd ./backend && npm start",
+    "start-only-backend": "npm run setup && npm run docker && npm run start-backend",
     "start-frontend": "cd frontend && npm start",
-    "test": "npm run setup && npm run docker && npm-run-all --sequential test-backend test-frontend test-util",
+    "test": "npm run setup && npm-run-all --sequential test-backend test-frontend test-util",
     "test-backend": "cd backend && npm test",
     "test-frontend": "echo not yet implemented",
     "test-util": "cd kern-util && npm test"
