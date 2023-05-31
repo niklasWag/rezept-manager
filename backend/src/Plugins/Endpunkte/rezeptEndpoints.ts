@@ -31,7 +31,7 @@ export class RezeptEndpoints {
             const lebensmittelRepository = DatenbankLebensmittelRepository.getInstance(transactionalEntityManager.getRepository(LebensmittelEntity))
             const zutatRepository = DatenbankZutatRepository.getInstance(transactionalEntityManager.getRepository(ZutatEntity))
 
-            this.rezeptCRUD.postRezept(rezeptData, rezeptRepository, lebensmittelRepository, zutatRepository)
+            await this.rezeptCRUD.postRezept(rezeptData, rezeptRepository, lebensmittelRepository, zutatRepository)
         })        
     }
 
@@ -58,7 +58,7 @@ export class RezeptEndpoints {
         const id: number = parseInt(req.params.id)
         if (Number.isNaN(id)) throw Error('Invalid parameter')
 
-        this.rezeptCRUD.deleteRezept(id)
+        await this.rezeptCRUD.deleteRezept(id)
     }
 
     async putRezept(req: Request) {
@@ -72,7 +72,7 @@ export class RezeptEndpoints {
             const lebensmittelRepository = DatenbankLebensmittelRepository.getInstance(transactionalEntityManager.getRepository(LebensmittelEntity))
             const zutatRepository = DatenbankZutatRepository.getInstance(transactionalEntityManager.getRepository(ZutatEntity))
 
-            this.rezeptCRUD.putRezept(rezeptData, rezeptRepository, lebensmittelRepository, zutatRepository)
+            await this.rezeptCRUD.putRezept(rezeptData, rezeptRepository, lebensmittelRepository, zutatRepository)
         })  
     }
 
@@ -83,6 +83,6 @@ export class RezeptEndpoints {
         if (req.body.aufwand && Array.isArray(req.body.aufwand)) aufwand = req.body.aufwand
         if (!req.body.lebensmittel && !req.body.aufwand) throw Error('body type error')
 
-        return this.rezeptCRUD.searchRezepte(lebensmittelIds, aufwand)
+        return await this.rezeptCRUD.searchRezepte(lebensmittelIds, aufwand)
     }
 }
