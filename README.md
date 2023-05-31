@@ -1,9 +1,9 @@
 # Rezept Manager
 ---
-- [Prerequisites][prerequisites]
-- [Development Setup][development-setup]
-- [Unit Testing][unit-testing]
-- [Postman Collection][postman-collection]
+- [Prerequisites](prerequisites)
+- [Development Setup](development-setup)
+- [Unit Testing](unit-testing)
+- [Postman Collection](postman-collection)
 
 
 ## Prerequisites
