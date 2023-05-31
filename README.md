@@ -1,5 +1,5 @@
 # Rezept Manager
----
+
 - [Prerequisites](#prerequisites)
 - [Development Setup](#development-setup)
 - [Unit Testing](#unit-testing)
